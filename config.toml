@@ -32,8 +32,8 @@ disqusShortname = ""
 
   # 404 error customization
   [params.error404]
-    heading = "Page couldn't be found"
-    text = "Please visit [this page](/)"
+    heading = "Told You This Site Is In Construction"
+    text = "You may now go [back] (/)"
 
   # Navigation Section
   [params.navigation]
@@ -95,7 +95,7 @@ disqusShortname = ""
       title = "Aliquam"
       subtitle = "Ipsum Dolor Sit Amet"
       image = "pic01.jpg"
-      url = "blog1.md"
+      url = "homework3.Rmd"
 
     [[params.tiles.showcase]]
       title = "Tempus"
