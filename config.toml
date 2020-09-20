@@ -58,12 +58,12 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
      url = "blogs/project1"
 
     [[params.navigation.links]]
-     name = "World Bank Data Analysis"
-     url = "blogs/project1"
+     name = "IMDB Movie Analysis"
+     url = "blogs/project2"
      
      [[params.navigation.links]]
-     name = "World Bank Data Analysis"
-     url = "blogs/project1"
+     name = "IBM HR Analytics"
+     url = "blogs/project3"
 
 #     Button Style 1
     [[params.navigation.button1]]
@@ -93,16 +93,16 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
       url = "blogs/project1"
 
     [[params.tiles.showcase]]
-      title = "Tempus"
-      subtitle = "Feugiat Amet Tempus"
-      image = "pic02.jpg"
-      url = "blogs"
+      title = "IMDB Movie Analysis"
+      subtitle = "IMDB 5000 Movie Dataset"
+      image = "imdb.png"
+      url = "blogs/project2"
 
     [[params.tiles.showcase]]
-      title = "Magna"
-      subtitle = "Lorem Etiam Nullam"
-      image = "pic03.jpg"
-      url = "blogs/magna"
+      title = "IBM HR Analytics"
+      subtitle = "Job Satisfaction, Work Life Balance, Gender..."
+      image = "ibm.png"
+      url = "blogs/project3"
 
 
   [params.blog]
