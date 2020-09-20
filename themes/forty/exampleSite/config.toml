@@ -1,7 +1,7 @@
 # Site settings
-baseURL = "http://example.org/"
+baseURL = "https://zw-r-portfolio-2020.netlify.app/"
 languageCode = "en-us"
-title = "Forty"
+title = "Zichen's R Portfolio"
 theme = "forty"
 
 # Enter your tracking code to enable Google Analytics
@@ -9,6 +9,8 @@ googleAnalytics = ""
 
 # Enter your disqus shortname to enable comments
 disqusShortname = ""
+
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [params]
   # You can use Markdown syntax for urls [text](//url.to/source)
@@ -19,8 +21,8 @@ disqusShortname = ""
   # CSS class.
 
   # Provide your metadata here.
-  name = "Your name"
-  description = "Your description"
+  name = "Zichen WANG"
+  description = "To Be A Data Analyst"
 
   # Link custom assets relative to /static
   custom_css = []
@@ -32,13 +34,13 @@ disqusShortname = ""
 
   # 404 error customization
   [params.error404]
-    heading = "Page couldn't be found"
-    text = "Please visit [this page](/)"
+    heading = "Told you this site is in construction..."
+    text = "You may now go [back](/)"
 
   # Navigation Section
   [params.navigation]
-    title = "Forty"
-    subtitle = "By HTML5 Up"
+    title = " Zichen W | R Portfolio "
+    subtitle = "Est. 2020"
     menu = "Menu"
     # Optional logo as brand stored in img/
     # logo = "logo.png"
@@ -48,32 +50,28 @@ disqusShortname = ""
       url = "#"
 
     [[params.navigation.links]]
-      name = "Blogs"
-      url = "blogs"
+      name = "About Me"
+      url = "blogs/blog1"
 
     [[params.navigation.links]]
-      name = "Generic Blog"
-      url = "blogs/ipsum"
+     name = "World Bank Data Analysis"
+     url = "blogs/project1"
 
     [[params.navigation.links]]
-      name = "Elements"
-      url = "elements.html"
+     name = "IMDB Movie Analysis"
+     url = "blogs/project2"
+     
+     [[params.navigation.links]]
+     name = "IBM HR Analytics"
+     url = "blogs/project3"
+     
+    [[params.navigation.links]]
+     name = "Airbnb Price Model"
+     url = "blogs/project4"
 
-    # Add custom links here by uncommenting code below. To remove links just delete
-    # the [[params.navigation.links]] map associated with that link. Copy and paste
-    # code below if you need more links. Buttons work in the same way.
-    # [[params.navigation.links]]
-    #    name = "NameOfLink"
-    #    url = "UrlOfLink"
-
-    # Button Style 1
+#     Button Style 1
     [[params.navigation.button1]]
-      name = "Get Started"
-      url = "blogs"
-
-    # Button Style 2
-    [[params.navigation.button2]]
-      name = "Log In"
+      name = "Contact Me"
       url = "#"
 
 
@@ -81,9 +79,10 @@ disqusShortname = ""
   [params.banner]
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
-    title = "Hi, my name is Forty"
-    subtitle = "A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP\nAND RELEASED UNDER THE CREATIVE COMMONS."
-    buttonText = "Get Started"
+    title = "Welcome to Zichen's R Portfolio"
+    subtitle = """A Person in Lifetime Study. \n
+    A Presentation Website Under Lifetime Construction."""
+    buttonText = "Know More"
 
 
   # Tiles Section
@@ -92,41 +91,29 @@ disqusShortname = ""
     # Display your showcases here.
     
     [[params.tiles.showcase]]
-      title = "Aliquam"
-      subtitle = "Ipsum Dolor Sit Amet"
+      title = "World Bank Data Analysis"
+      subtitle = "Life Expectancy, HIV Prevalence, GDP, Fertility Rate, Enrollment Rate, and Mortality Rate"
       image = "pic01.jpg"
-      url = "blogs/aliquam"
+      url = "blogs/project1"
 
     [[params.tiles.showcase]]
-      title = "Tempus"
-      subtitle = "Feugiat Amet Tempus"
-      image = "pic02.jpg"
-      url = "blogs/tempus"
+      title = "IMDB Movie Analysis"
+      subtitle = "IMDB 5000 Movie Dataset"
+      image = "imdb.png"
+      url = "blogs/project2"
 
     [[params.tiles.showcase]]
-      title = "Magna"
-      subtitle = "Lorem Etiam Nullam"
-      image = "pic03.jpg"
-      url = "blogs/magna"
-
+      title = "IBM HR Analytics"
+      subtitle = "Job Satisfaction, Work Life Balance, Gender..."
+      image = "ibm.png"
+      url = "blogs/project3"
+      
     [[params.tiles.showcase]]
-      title = "Ipsum"
-      subtitle = "Nisl Sed Aliquam"
-      image = "pic04.jpg"
-      url = "blogs/ipsum"
+      title = "Price Prediction Model of Airbnb Beijing"
+      subtitle = "What is the most relevance determinant?"
+      image = "Airbnb.jpg"
+      url = "blogs/project4"
 
-    [[params.tiles.showcase]]
-      title = "Consequat"
-      subtitle = "Ipsum Dolor Sit Amet"
-      image = "pic05.jpg"
-      url = "blogs/ipsum"
-
-    [[params.tiles.showcase]]
-      title = "Etiam"
-      subtitle = "Feugiat Amet Tempus"
-      image = "pic06.jpg"
-      url = "blogs/ipsum"
-    # You can make more showcases by copy and pasting the code above
 
   [params.blog]
     # All blogs defined in their own files. You can find example blogs
@@ -134,18 +121,19 @@ disqusShortname = ""
     # at the root of this Hugo site.
     # For more informtion take a look at the README.
     # To add more blogs just copy and paste the code.
+      [[params.blog.showcase]]
+      title = "World Bank Data Analysis"
+      subtitle = "Life Expectancy, HIV Prevalence, GDP, Fertility Rate, Enrollment Rate, and Mortality Rate"
+      image = "pic01.jpg"
+      url = "blogs/project1"
 
   # Section Type Two
   [params.two]
     enable = true
-    title = "Massa libero"
-    subtitle = """Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. 
-    Mauris aliquet magna magna sed nunc rhoncus pharetra. 
-    Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. 
-    Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero.
-    Mauris aliquet magna magna sed nunc rhoncus amet pharetra et feugiat tempus."""
-    buttonText = "Get Started"
-    url = "blogs"
+    title = "R Portfolio"
+    subtitle = """Established during the first course Applied Statistics with R of Zichen in her Masters in Analytics and Management program London Business School, this website is dedicated to her projects within the course and will further develope with more projects beyond the course.
+    The course represented the beginning of her journey in R, and this website will show you how the journey began.
+    """
 
 
   # Contact section
@@ -157,65 +145,56 @@ disqusShortname = ""
     # Since this template is static, the contact form uses www.formspree.io as a
     # proxy. The form makes a POST request to their servers to send the actual
     # email. Visitors can send up to a 1000 emails each month for free.
-    #
-    # What you need to do for the setup?
-    #
-    # - set your email address under 'email' below and uncomment
-    # - upload the generated site to your server
-    # - send a dummy email yourself to confirm your account
-    # - click the confirm link in the email from www.formspree.io
-    # - you're done. Happy mailing!
-    # formEmail = "example@domain.com"
+    # To register to receive visitors' messages
+    formEmail = "zwang.mam2021@london.edu"
 
     # Contact Section
-    # You can add multiple emails, phone numbers, or addresses
-    # by copying the corresponding map with frontmatter code.
     [[params.contact.email]]
     title = "Email"
-    email = "example@domain.com"
+    email = "zwang.mam2021@london.edu"
 
     [[params.contact.phone]]
     title = "Phone"
-    phone = "(000) 000-0000 x1234"
+    phone = "(+86) 10086"
 
     [[params.contact.address]]
     title = "Address"
-    street = "Street"
-    city = "City, ST 00000"
-    country = "Country"
+    street = "Baker Street"
+    city = "London, ST 00000"
+    country = "United Kingdom"
 
   # Footer section
   [params.footer]
     enable = true
-    copyright = "Company Name"
+    copyright = "Zichen Wang @LBS"
 
     # Uses font awesome icons
-    [[params.footer.social]]
-      icon = "fa-twitter"
-      url= "https://www.twitter.com"
-      label = "Twitter"
+#    [[params.footer.social]]
+#      icon = "fa-twitter"
+#      url= "https://www.twitter.com"
+#      label = "Twitter"
 
     [[params.footer.social]]
       icon = "fa-facebook"
-      url= "https://www.facebook.com"
+      url= "https://www.facebook.com/profile.php?id=100006673606503"
       label = "Facebook"
 
     [[params.footer.social]]
       icon = "fa-instagram"
-      url= "https://www.instagram.com"
+      url= "https://www.instagram.com/igeae/"
       label = "Instagram"
     
     [[params.footer.social]]
       icon = "fa-github"
-      url= "https://www.github.com"
+      url= "https://github.com/zichen-wang-ac"
       label = "GitHub"
 
     [[params.footer.social]]
       icon = "fa-linkedin"
-      url= "https://www.linkedin.com"
+      url= "https://www.linkedin.com/in/zichen-wang-ac/"
       label = "LinkedIn"
 
-    [[params.footer.quicklinks]]
-      text = "Design: "
-      url= "https://www.html5up.net"
-      alt = "HTML5 UP"
+#      [[params.footer.quicklinks]]
+#        text = "Design: "
+#        url= "https://www.html5up.net"
+#        alt = "HTML5 UP"
