@@ -55,6 +55,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     [[params.navigation.links]]
      name = "Analytic Projects"
      url = "blogs"
+     
+     [[params.navigation.links]]
+     name = "Contact Me"
+     url = "#contact"
 
     # Button Style 1
 #    [[params.navigation.button1]]
@@ -73,7 +77,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     # the 'static/img' folder.
     title = "Welcome to Zichen's R Portfolio"
     subtitle = """A Person in Lifetime Study.
-    A Presentation Website Under Lifetime Construction""""
+    A Presentation Website Under Lifetime Construction"""
     buttonText = "Know More"
 
 
@@ -86,7 +90,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
       title = "Project 1"
       subtitle = "Life & HIV"
       image = "pic01.jpg"
-      url = "blogs/homework2.Rmd"
+      url = "blogs/project1.Rmd"
 
     [[params.tiles.showcase]]
       title = "Tempus"
@@ -105,19 +109,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
       subtitle = "Nisl Sed Aliquam"
       image = "pic04.jpg"
       url = "blogs/ipsum"
-
-#    [[params.tiles.showcase]]
-#      title = "Consequat"
-#      subtitle = "Ipsum Dolor Sit Amet"
-#      image = "pic05.jpg"
-#      url = "blogs/ipsum"
-
-#    [[params.tiles.showcase]]
-#      title = "Etiam"
-#      subtitle = "Feugiat Amet Tempus"
-#      image = "pic06.jpg"
-#      url = "blogs/ipsum"
-    # You can make more showcases by copy and pasting the code above
+      
 
   [params.blog]
     # All blogs defined in their own files. You can find example blogs
@@ -156,7 +148,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     # - send a dummy email yourself to confirm your account
     # - click the confirm link in the email from www.formspree.io
     # - you're done. Happy mailing!
-    # formEmail = "example@domain.com"
+    formEmail = "zwang.mam2021@london.edu"
 
     # Contact Section
     # You can add multiple emails, phone numbers, or addresses

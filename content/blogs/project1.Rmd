@@ -1,6 +1,15 @@
 # Homework_2_Group_13
 ---
-title: "Session 4: Homework 2"
+
+categories:
+- ""
+- ""
+date: "2017-10-31T21:28:43-05:00"
+description: "About Me"
+draft: false
+keywords: ""
+slug: project1
+title: Life & HIV
 author: "Study Group 13"
 date: "Sep 20, 2020"
 output:
