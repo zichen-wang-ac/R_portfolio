@@ -1,17 +1,12 @@
-# Homework_2_Group_13
 ---
-
 categories:
 - ""
 - ""
-date: "2017-10-31T21:28:43-05:00"
-description: "About Me"
+description: "Project 1"
 draft: false
 keywords: ""
-slug: project1
-title: Life & HIV
-author: "Study Group 13"
-date: "Sep 20, 2020"
+slug: "project1"
+title: World Bank Data Analysis
 output:
   html_document:
     theme: flatly
@@ -22,8 +17,7 @@ output:
     code_folding: show
 ---
 
-
-```{r, setup, include=FALSE}
+```{r, setup, include = FALSE}
 knitr::opts_chunk$set(
   message = FALSE, 
   warning = FALSE, 
@@ -39,587 +33,123 @@ knitr::opts_chunk$set(
 ```
 
 
-```{r load-libraries, include=FALSE}
-library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+```{r load-libraries, include = FALSE}
+library(tidyverse)
 library(mosaic)
 library(ggthemes)
-library(lubridate)
 library(here)
 library(skimr)
 library(janitor)
 library(httr)
 library(readxl)
-library(vroom)
-#install.packages(infer)
 ```
 
 
 
-# Climate change and temperature anomalies 
+# About
 
+This project is part of the second group homework of [Applied Statistics with R](https://mam2021.netlify.app/) taught by Professor Kostis Christodoulou at **London Business School**.
 
-If we wanted to study climate change, we can find data on the *Combined Land-Surface Air and Sea-Surface Water Temperature Anomalies* in the Northern Hemisphere at [NASA's Goddard Institute for Space Studies](https://data.giss.nasa.gov/gistemp). The [tabular data of temperature anomalies can be found here](https://data.giss.nasa.gov/gistemp/tabledata_v3/NH.Ts+dSST.txt)
+My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
 
-To define temperature anomalies you need to have a reference, or base, period which NASA clearly states that it is the period between 1951-1980.
+The project utilizes the following datasets:
 
-Run the code below to load the file:
+- Life expectancy at birth
+- [GDP per capita in constant 2010 US$](https://data.worldbank.org/indicator/NY.GDP.PCAP.KD)
+- [Female fertility: The number of babies per woman](https://data.worldbank.org/indicator/SP.DYN.TFRT.IN)
+- [Primary school enrollment as % of children attending primary school](https://data.worldbank.org/indicator/SE.PRM.NENR)
+- [Mortality rate, for under 5, per 1000 live births](https://data.worldbank.org/indicator/SH.DYN.MORT)
+- HIV prevalence (The estimated number of people living with HIV per 100 population of age group 15-49)
 
-```{r weather_data, cache=TRUE}
-weather <- read_csv("https://data.giss.nasa.gov/gistemp/tabledata_v3/NH.Ts+dSST.csv", 
-           skip = 1, #skip one row as real data starts from row 2
-           na = "***") #missing data is coded as *** so we specify that here
-weather
-```
-Next, we will clean the dataset - discard unwanted columns and convert the wide format to a long format.
+# Let's do this
 
-```{r tidyweather}
-# dropping columns we don't need
-weather2 <- weather %>% select(-`J-D`, -`D-N`, -DJF, -MAM, -JJA, -SON)
-weather2
+Before we start to analyze the data, we must first retrieve the data. If connection permits, you can use a package called `wbstats` which contains the world bank data. If not, you can download the datasets by clicking on the underlined bullet points above to manually download the data, then you can following the steps below to load data locally.
 
-# converting dataframe from wide to long format using pivot_longer( ) 
-tidyweather <- weather2 %>% pivot_longer(cols=2:13, names_to="month", values_to="delta")
-tidyweather
-```
+```{r, get_data, cache = TRUE}
 
-Inspecting our dataframe, we have three variables now - one each for year, month and delta (temperature deviation). 
-
-## Plotting Information
-
-We will plot the data using a time-series scatter plot, and add a trendline. But first we use 'lubridate' for dates to ensure that delta plots chronologically.
-
-```{r scatter_plot}
-# reformatting dates
-tidyweather <- tidyweather %>%
-  mutate(date = ymd(paste(as.character(Year), month, "1")), # lubridate used here
-         month = month(date, label=TRUE),
-         Year = year(date)) 
-
-# plotting temperature deviation 
-ggplot(tidyweather, aes(x=date, y = delta))+
-  geom_point(alpha=0.5) +
-  geom_smooth(color="red") +
-  theme_bw() +
-  theme(
-    plot.title=element_text(face="bold")
-  ) +
-  labs (
-    title = "Weather Anomalies",
-    subtitle = "Trends in temperature deviations over the period 1880 - 2019",
-    x = "Year",
-    y = "Temperature Deviation"
-  )
-```
-Next, we study the effect of increasing temperature by month. 
- 
-```{r facet_wrap}
-
-# plotting scatterplot and trend lines by month
-ggplot(tidyweather, aes(x=date, y = delta))+
-  geom_point(size=0.5, alpha=0.6)+
-  geom_smooth(color="red") +
-  facet_wrap(~month) + # to separate plots by month
-  theme_bw() +
-  theme(
-    plot.title=element_text(face="bold")
-  ) +
-  labs (
-    title = "It's Getting Hot in Here",
-    subtitle="Trends in temperature deviations BY MONTH between 1880 and 2019",
-    y="Temperature Deviation",
-    x="Year"
-  )
-```
-> Overall, we see a gradual rise in the average temperature across all twelve months from 1880 to 2019 owing to Global Warming. This rise has been greater for winter months such as January, February, November and December, compared to summer months such as May, June, July and August. 
-> Another point worth mentioning is that the winter months depict greater deviation (the points are more scattered around the trendline) compared to summer months which have relatively lower deviation (the points are closer to the trendline)
-
-Since it is sometimes useful to group data into different time periods to study historical data, we create a new data frame called `comparison` that groups data into five time periods: 1881-1920, 1921-1950, 1951-1980, 1981-2010 and 2011-present. 
-
-```{r intervals}
-
-comparison <- tidyweather %>% 
-  filter(Year>= 1881) %>%     #remove years prior to 1881
-  #create new variable 'interval', and assign values based on criteria below:
-  mutate(interval = case_when(
-    Year %in% c(1881:1920) ~ "1881-1920",
-    Year %in% c(1921:1950) ~ "1921-1950",
-    Year %in% c(1951:1980) ~ "1951-1980",
-    Year %in% c(1981:2010) ~ "1981-2010",
-    TRUE ~ "2011-present"
-  ))
-
-comparison
-```
-Now that we have intervals, we can study the distribution of monthly deviations (`delta`), grouped by the different time periods we are interested in. 
-
-```{r density_plot}
-
-ggplot(comparison, aes(x=delta, fill=interval)) + #fill to group and colour by different time intervals
-  geom_density(alpha=0.2) +   #density plot with transparency set to 20%
-  theme_bw( ) +               # theme white background and grey lines
-  theme(
-    plot.title=element_text(face="bold") # make title bold
-  ) +
-  labs (
-    title="Distribution of Monthly Deviations",
-    subtitle = "Density plot grouped by different time intervals ",
-    y = "",
-    x = "Temperature Deviation",
-    legend.title=""
-    ) +
-  guides(fill=guide_legend((title="Time Interval"))) #change legend title
-
-```
-So far, we have been working with monthly data for temperature deviaitons. Let us study average annual anomalies next. 
-
-```{r averaging}
-
-#creating yearly averages
-average_annual_anomaly <- tidyweather %>% 
-  group_by(Year) %>%   #grouping data by Year
-  
-  # creating summaries for mean delta 
-  summarise(annual_average_delta = mean(delta, na.rm=TRUE)) # use `na.rm=TRUE` to eliminate NA (not available) values
-
-#plotting the data:
-ggplot(average_annual_anomaly, aes(x=Year, y= annual_average_delta))+
-  geom_point()+
-  geom_smooth(method="loess", color="red") +  # fit the best fit line, using LOESS method
-  theme_bw() +
-  theme(
-    plot.title = element_text(face="bold")
-  ) +
-  labs (
-    title = "Average Yearly Anomaly",
-    y     = "Average Annual Temperature Deviations"
-  )                         
-```
-## Confidence Interval for `delta`
-
-> A one-degree global change is significant because it takes a vast amount of heat to warm all the oceans, atmosphere, and land by that much. In the past, a one- to two-degree drop was all it took to plunge the Earth into the Little Ice Age.
-
-We will construct a confidence interval for the average annual 'delta' since 2011, using two different methods 
-
-(1) a formula 
-
-```{r, calculate_CI_using_formula}
-
-formula_CI <- comparison %>% 
-                filter(interval=="2011-present") %>% # filter for time period we're interested in
-                summarise(mean=mean(delta, na.rm=TRUE), # calculate summary statistics for delta
-                          SD=sd(delta, na.rm=TRUE), 
-                          count=n(), 
-                          SE=SD/sqrt(count),
-                          lower_CI = mean - 1.96*SE,
-                          upper_CI = mean + 1.96*SE
-                          )
-
-formula_CI
-```
-
-(2) bootstrap simulation with the `infer` package
-
-```{r, calculate_CI_using_bootstrap}
-
-# use the infer package to construct a 95% CI for delta
-library(infer)
-
-set.seed(1234)
-whatever_id_like <- comparison %>% 
-  filter(interval=="2011-present") %>%      # filtering for time period we're interested in
-  specify(response=delta) %>%               # specifying what we're calculating CI for
-  generate(reps=1000, type="bootstrap") %>% # generate random samples or reps using bootstrap
-  calculate(stat="mean")                    # calculate mean
-  
-percentile_CI <- whatever_id_like %>% 
-                 get_confidence_interval(comparison$delta, level=0.95, type="percentile")
-percentile_CI
-```
-
-> The first method calculates summary statistics and confidence intervals (CI) using the whole data for temperature deviations (delta) from 2011 to present. The second bootstrap method creates 1000 random samples (reps), and calculates their means on the basis of which we arrive at CIs. 
-
-> The 95% lower CI and upper CI is 0.917 and 1.02 respectively, which means that out of every 1000 samples, we are confident that for 950 samples the range [0.917, 1.02] would correctly contain the true mean of the population.      
-
-# General Social Survey (GSS)
-
-The [General Social Survey (GSS)]gathers data on American society in order to monitor and explain trends in attitudes, behaviours, and attributes. Many trends have been tracked for decades, so one can see the evolution of attitudes, etc in American Society.
-
-Here, we analyze data from the **2016 GSS sample data**.
-
-```{r, read_gss_data, cache=TRUE}
-gss <- read_csv(here::here("data", "smallgss2016.csv"), 
-                na = c("", "Don't know",
-                       "No answer", "Not applicable")) # this is how NA data is in the .csv file
-gss
-```
-
-## Instagram and Snapchat, by sex
-
-First, we will study the Instagram and Snapchat usage habits of the survey respondents. 
-
-```{r}
-# creating a new variable 'snap_insta'
-gss_2 <- gss %>% 
-          mutate(
-            snap_insta = case_when(
-              (snapchat=="Yes" | instagrm=="Yes") ~ "Yes",
-              (snapchat=="NA" & instagrm=="NA") ~ "NA",
-              TRUE ~ "No"
-              )
-            )
-gss_2 
-```
-To calculate the proportion of Yes’s for the new variable - `snap_insta`, among those who answered the question, we filter the data as below:
-```{r}
-
-gss_3 <- gss_2 %>% 
-        filter(snap_insta=="Yes" | snap_insta=="No") %>% # filtering out NAs
-        summarise(proportion_of_yes = count(snap_insta=="Yes")/count(snap_insta!="NA"))
-gss_3 
-```
-
-Next, using the CI formula for proportions, we will construct 95% CIs for men and women who used either Snapchat or Instagram
-
-```{r}
-
-# filtering data for men who used either SC or IG
-gss_male <- gss_2 %>% 
-  filter(snap_insta == "Yes" | snap_insta=="No") %>%
-  filter(sex == "Male") %>%
-   summarise(prop_yes_males = count(snap_insta=="Yes")/count(snap_insta!="NA")
-             )
-
-gss_male 
-
-# filtering data for women who used either SC or IG
-gss_female <- gss_2 %>% 
-  filter(snap_insta == "Yes" | snap_insta=="No") %>%
-  filter(sex == "Female") %>%
-   summarise(prop_yes_females = count(snap_insta=="Yes")/count(snap_insta!="NA")
-             )
-
-gss_female
-
-# The number of men for either SC or IG is calculated.
-n_male <- gss_2 %>% 
-  filter(snap_insta == "Yes" | snap_insta=="No") %>%
-  filter(sex == "Male") %>% 
-  nrow()
-n_male
-
-# The number of women for either IG or SC is calculated.
-n_female <- gss_2 %>% 
-  filter(snap_insta == "Yes" | snap_insta=="No") %>%
-  filter(sex == "Female") %>% 
-  nrow()
-n_female
-
-# The standard errors for both men and women are found.
-se_scinsta_male <- sqrt(gss_male*(1-gss_male)/n_male)
-se_scinsta_female <- sqrt(gss_female*(1-gss_female)/n_female)
-  
-# The average IG and SC men and women are found.
-mean_scinsta_male <- se_scinsta_male/sqrt(n_male)
-mean_scinsta_female <- se_scinsta_female/sqrt(n_female)
-
-# The lower and upper confidence intervals are calculated from adding +/- 1.96*SE
-lower_ci_male <- mean_scinsta_male - (1.96*se_scinsta_male)
-upper_ci_male <- mean_scinsta_male + (1.96*se_scinsta_male)
-lower_ci_female <- mean_scinsta_female - (1.96*se_scinsta_female)
-upper_ci_female <- mean_scinsta_female + (1.96*se_scinsta_female)
-
-paste("95% confidence interval for men who use either Snapchat or instagram is: ", round(lower_ci_male, 3), ",", round(upper_ci_male,3), " whereas that for women who use either Snapchat or instagram: ", round(lower_ci_female, 3), ",", round(upper_ci_female, 3) ) 
-      
-```
-
-## Twitter, by education level
-
-First, we will convert `degree` from a character variable into a factor variable, making sure the order is correct - Lt high school, High school, Junior college, Bachelor and Graduate. 
-
-Second, for bachelors & graduates we'll calculate the proportion of people who do and don't use twitter. 
-
-Finally, using the CI formula for proportions, we'll construct two 95% CIs for bachelors & graduates depending on whether they use twitter or not.
-
-```{r}
-# converting degree to factor variable
-twitter_cleaned <- gss %>% 
-  mutate(
-    degree = factor(degree, levels = c("Lt high school", "High school", "Junior college", "Bachelor", "Graduate"), 
-                    ordered = TRUE)
-        ) %>% 
-  mutate(                                   # categorising people on basis of whether they're bachelors/graduates
-    bachelor_graduate = case_when(
-      (degree == "Bachelor") ~ "Yes",
-      (degree == "Graduate") ~ "Yes",
-      (degree == "NA") ~ "NA",
-      TRUE ~ "No"
-          )
-        ) 
-twitter_cleaned
-
-# filtering bachelors & graduates to study their twitter usage
-twitter_stats <- twitter_cleaned %>% 
-  filter(bachelor_graduate=="Yes") %>% 
-  summarise(
-      prop_twitter_yes = count(twitter=="Yes")/count(twitter=="Yes" | twitter=="No"), 
-      prop_twitter_no = count(twitter=="No")/count(twitter=="Yes" | twitter=="No")
-            ) 
-
-twitter_stats
-
-# assigning values for calculating CIs
-p_hat <- twitter_stats$prop_twitter_yes
-size <- twitter_cleaned %>% 
-            filter(twitter != "NA") %>% 
-      nrow()
-
-# calculating std error and mean                  
-se_twitter <- sqrt(p_hat*(1-p_hat)/size)
-mean_twitter <- se_twitter/sqrt(size)
-
-# calculating lower and upper confidence interval  
-twitter_lower_ci <- mean_twitter - (1.96*se_twitter) 
-twitter_upper_ci <- mean_twitter + (1.96*se_twitter)
-
-paste("95% confidence interval for Bachelors and Graduates who use Twitter is: ", round(twitter_lower_ci, 4), ",", round(twitter_upper_ci,4))
-```
-## Email usage
-
-To study the time survey respondents spend reading emails weekly, we will visual a variable which combines email hrs and email mins. 
-
-We'll also find the mean and the median number of minutes to decide which is a better measure of the typical amount of time Americans spend on email weekly.
-
-```{r}
-# convert email mins and hrs into numeric variable
-gss_email <- gss_2 %>% 
-    filter(emailhr != "NA") %>% 
-    mutate(
-      emailhr = as.numeric(emailhr), 
-      emailmin = as.numeric(emailmin), 
-      email_hours = (emailhr * 60), 
-      email = email_hours + emailmin
-        )
-
-gss_email
-
-# finding mean and median
-gss_summarise <-  gss_email %>% 
-  summarise(mean_total = mean(email), 
-            median_total = median(email) 
-            )
-
-gss_summarise
-
-# plotting the amount of mins spent weekly on emails 
-email_plot <- gss_email %>% 
-  ggplot(gss_email, mapping = aes(x = email)) +
-  geom_boxplot() +
-  theme_bw() +
-  theme(
-    plot.title=element_text(face="bold")
-  ) +
-  labs(
-    title = "Check your Inbox!",
-    subtitle = "Time Americans spend weekly reading their emails",
-    y = "",
-    x = "minutes"
-  ) +
-  NULL
-
-email_plot
-
-```
-> From the above boxplot, we can conclude that there are a couple of outliers which influence the mean. Therefore, median would be a better measure of the amount of time a typical American spends reading his emails weekly.
-
-Next, we'll calculate a 95% bootstrap confidence interval for the mean amount of time Americans spend on email weekly. 
-
-``` {r}
-
-library(infer)
-set.seed(2468)
-
-# bootstrap
-whatever_id_email <- gss_email %>% 
-  specify(response = email) %>% 
-  generate(reps=1000, type="bootstrap") %>% 
-  calculate(stat="mean")
-
-# using lubridate to format dates  
-tidyweather <- tidyweather %>%
-  mutate(date = ymd(paste(as.character(Year), month, "1")),
-         month = month(date, label=TRUE),
-         Year = year(date)) 
-
-# calculating confidence interval
-email_CI <- whatever_id_email %>% 
-  get_confidence_interval(gss_email$email, level=0.95, type="percentile")
-
-email_CI
-
-lower_ci_hours <- round(email_CI$lower_ci / 60, 0)
-lower_ci_mins <- email_CI$lower_ci %% 60
-upper_ci_hours <- round(email_CI$upper_ci / 60, 0)
-upper_ci_mins <- email_CI$upper_ci %% 60
-
-paste("95% confidence interval for email hours is:", lower_ci_hours, "hr", round(lower_ci_mins,0), "minutes,", upper_ci_hours, "hr", round(upper_ci_mins), "minutes")
-```
-> If we were to calculate a 99% confidence interval instead, we would expect it to be wider. To be more confident that the true population mean will lie within the confidence interval, we expand the range of the interval itself to allow more potential values to fall within it. Therefore, greater confidence comes at the cost of a wider range. 
-
-# Trump's Approval Margins
-
-```{r, cache=TRUE}
-# Import approval polls data
-approval_polllist <- read_csv(here::here('data', 'approval_polllist.csv'))
-
-# Quickly view data set.
-glimpse(approval_polllist)
-
-# Data set cleaned.
-approval_polllist_clean <- approval_polllist %>%
-    select(c(enddate, samplesize, adjusted_approve, adjusted_disapprove)) %>% 
-    mutate(approval_difference = adjusted_approve - adjusted_disapprove)
-approval_polllist_clean
-
-# Use `lubridate` to fix dates, as they are given as characters.
-```
-
-## Create a plot
-
-The Average net approval rating of Trump along with the 95% confidence intervals are calculated below.
-
-```{r}
-# The data set of approval ratings are cleaned along with finding the confidence intervals.
-Trump_Approval <- approval_polllist_clean %>%
-  mutate(enddate = mdy(enddate),
-         year = year(enddate),
-         week = week(enddate)
-         ) %>%
-  group_by(year, week) %>% 
-        summarise(Weekly_difference = sum(approval_difference),
-                  avg_difference = mean(approval_difference),
-                  se_Trump = sd(approval_difference)/sqrt(n()),
-                  t_crit = qt(0.975, n() - 1),
-                  lower_CIs = (avg_difference - t_crit * se_Trump),
-                  upper_CIs = (avg_difference + t_crit * se_Trump)
-                  )
-Trump_Approval
-
-# The approval plot is created along with the confidence intervals.
-Approval_Plot <- Trump_Approval %>%
-  ggplot(aes(x = week, y = avg_difference)) +
-  geom_ribbon(mapping = aes(ymin = lower_CIs, ymax = upper_CIs), alpha = 0.3)+
-  geom_line() +
-  geom_point() +
-  facet_wrap(~ year) +
-  geom_hline(mapping = aes(yintercept = 0), color = "orange") +
-  theme(legend.position = "none",
-        panel.background = element_rect("white", "black"),
-        panel.grid.major = element_line("light grey"),
-        panel.grid.minor = element_line("light grey")
-        ) +
-  labs (
-    title = "Estimate Net Approval (approve-disaprove) for Donald Trump",
-    subtitle = "Weekly average of all polls",
-    y = "Average Net Approval (%)",
-    x = "Week of the year"
-  ) +
-  expand_limits(x = c(0, 52), y = 7.5) +
-  NULL
-
-Approval_Plot
-```
-
-Ideal picture of plot.
-
-```{r trump_margins, echo=FALSE, out.width="100%"}
-picture <-knitr::include_graphics(here::here("images", "trump_approval_margin.png"), error = FALSE)
-```
-
-## Compare Confidence Intervals
-
-> As seen in the approval plot, mid-April shows that the confidence intervals are closer compared to larger confidence intervals in mid August. As standard error is proportional to the variance of trump's approval ratings, national events that happened mid August, such as the BLM protests and the handling of the Covid crisis, has made the public's view of Trump far more polarized. Because of this, the standard errors increase widening the confidence intervals.
-
-
-# Gapminder revisited
-
-In this part, we will join a few dataframes with data on: 
-
-- Life expectancy at birth (life_expectancy_years.csv)
-- GDP per capita in constant 2010 US$ (https://data.worldbank.org/indicator/NY.GDP.PCAP.KD)
-- Female fertility: The number of babies per woman (https://data.worldbank.org/indicator/SP.DYN.TFRT.IN)
-- Primary school enrollment as % of children attending primary school (https://data.worldbank.org/indicator/SE.PRM.NENR)
-- Mortality rate, for under 5, per 1000 live births (https://data.worldbank.org/indicator/SH.DYN.MORT)
-- HIV prevalence (adults_with_hiv_percent_age_15_49.csv): The estimated number of people living with HIV per 100 population of age group 15-49.
-
-First, we will compile and clean the dataframes.
-```{r, get_data, cache=TRUE}
-
-# load gapminder HIV and life Expectancy data, turn the data frames into one format
+# load gapminder HIV and life Expectancy data, 
+# turn the data frames into one format
 hiv <- read_csv(here::here("data","adults_with_hiv_percent_age_15_49.csv")) %>% 
-    pivot_longer(cols = 2:34, names_to = "date", values_to = "hiv_prv")%>% 
+    pivot_longer(cols = 2:34, 
+                 names_to = "date", 
+                 values_to = "hiv_prv")%>% 
     mutate(date = as.numeric(date),
            hiv_prv = as.numeric(hiv_prv))
-NULL
 
 life_expectancy <- read_csv(here::here("data","life_expectancy_years.csv")) %>% 
-    pivot_longer(cols = 2:302, names_to = "date", values_to = "life_exp") %>% 
+    pivot_longer(cols = 2:302, 
+                 names_to = "date", 
+                 values_to = "life_exp") %>% 
     mutate(date = as.numeric(date),
            life_exp = as.numeric(life_exp))
-NULL
 
 # get World bank data from local due to the difficulty of connection
 worldbank_data <- read_csv(here::here("data","worldbank_data.csv"))
 
-# get a dataframe of information regarding countries, indicators, sources, regions, indicator topics, lending types, income levels,  from the World Bank API 
+# get a data frame of information regarding countries, indicators, sources, regions, indicator topics, lending types, income levels,  from the World Bank API 
 countries <-  read_csv(here::here("data","countries.csv"))
+```
 
-#merge the 3 data frames using left_join which is more efficient
+
+
+After we gather the data, we can merge the datasets together for further convenience. In data merging, there are multiple methods to use such as `left_join`, `merge`, and `mutate`+`match`. 
+
+```{r, merge_data, cache = TRUE}
+# merge the 3 data frames using left_join which is more efficient
 merge_wbd <- worldbank_data %>% 
+  # join the life expectancy and hiv data
+  # using "country" and "date" as the comparing key
   left_join(., life_expectancy, by = c("country","date")) %>% 
   left_join(., hiv, by = c("country", "date")) %>% 
+  # add a column of "region"
+  # using "country" as the comparing key
   mutate(region = countries$region[match(country, countries$country)]) 
 
-#clean the merged data frame
+# rename the hard-to-read columns
 names(merge_wbd)[names(merge_wbd) == "SP.DYN.TFRT.IN"] <- "fertility_rate"
 names(merge_wbd)[names(merge_wbd) == "NY.GDP.PCAP.KD"] <- "GDP_cap"
 names(merge_wbd)[names(merge_wbd) == "SE.PRM.NENR"] <- "school_enroll"
 names(merge_wbd)[names(merge_wbd) == "SH.DYN.MORT"] <- "mortality_rate"
-
 ```
 
-After merging the data, we are to answer the following questions: 
+After merging the data, we are now able to answer the following questions using `ggplot`, a crucial instrument to plot graphs.
+
+
 
 1. What is the relationship between HIV prevalence and life expectancy? 
 ```{r, cache = TRUE}
 #plot the relationship between HIV prevalence and life expectancy
-ggplot(merge_wbd, aes(x = life_exp, y = hiv_prv)) + 
+ggplot(merge_wbd, aes(x = hiv_prv, y = life_exp)) + 
   geom_point(size = 0.2) + 
   geom_smooth(alpha = 0.5) +
   facet_wrap(~region, scales = "free") +
   theme_bw() +
   labs(title = "Relationship Between Life Expectancy and HIV Prevalance",
-       x = "Life Expectancy",
-       y = "HIV Prevalance")
+       x = "HIV Prevalance",
+       y = "Life Expectancy")
 ```
+
 
 2. What is the relationship between fertility rate and GDP per capita? 
 ```{r, cache = TRUE}
-
 #plot the relationship between fertility rate and GDP per capita
-ggplot(merge_wbd, aes(x = fertility_rate, y = GDP_cap)) + 
+ggplot(merge_wbd, aes(x = GDP_cap, y = fertility_rate)) + 
   geom_point(size = 0.2) + 
   geom_smooth() +
   facet_wrap(~region, scales = "free") +
   theme_bw() +
   labs(title = "Relationship Between Fertility Rate and GDP per Capita",
-       x = "Fertility Rate",
-       y = "GDP per Capita") 
+       x = "GDP per Capita",
+       y = "Fertility Rate") 
 ```
+
 
 3. Which regions have the most observations with missing HIV data? 
 ```{r, cache = TRUE}
-#find the regions with most missing HIV data
-library("scales") # package to format data in percentage 
+# package to format data in percentage
+library("scales")  
+
+# find the regions with most missing HIV data
 merge_wbd %>% 
   select(country, region, date, hiv_prv) %>% 
   group_by(region) %>% 
@@ -627,22 +157,23 @@ merge_wbd %>%
             na_total = sum(is.na(hiv_prv)),
             na_pct = scales::percent(round(na_total/data_total,2))) %>%
   ungroup() %>% 
-  ggplot(aes(x = na_total, y = reorder(region, na_total))) + 
-  geom_col() +
+  ggplot(aes(x = na_total, 
+             y = reorder(region, na_total))) + 
+  geom_col(width = 0.5) +
   labs(title = "Europe & Central Asia Has The Most Missing Data in HIV", 
        subtitle = "Number of Observations & Percentage of Total Regional Observation",
        x = "Number of Missing HIV Data",
        y = NULL) +
   theme_bw(base_size = 12) +
-  ggrepel::geom_text_repel(aes(label = na_pct), nudge_x = 1, size = 3) +
+  ggrepel::geom_text_repel(aes(label = na_pct), 
+                           nudge_x = 1, size = 3) +
   NULL
-  
 ```
 
-4. How has mortality rate for under 5 changed by region? In each region, what are the top 5 countries that have seen the greatest improvement, as well as those 5 countries where mortality rates have had the least improvement or even deterioration?
 
+4. How has mortality rate for under 5 changed by region? In each region, what are the top 5 countries that have seen the greatest improvement, as well as those 5 countries where mortality rates have had the least improvement or even deterioration?
 ```{r, cache = TRUE}
-#Plot the child(under 5) mortality rate trend by regions
+# plot the child(under 5) mortality rate trend by regions
 merge_wbd %>% 
   select(region, country, mortality_rate, date) %>% 
   drop_na(., mortality_rate) %>% 
@@ -658,22 +189,32 @@ merge_wbd %>%
   theme_bw() +
   NULL
 
-#Find the top 5 improved countries with data from 2000 to 2016 as many countries do not have earlier data
+# find the top 5 improved countries with data from 2000 to 2016 
+# as many countries do not have earlier data
 new_merge_wbd <- merge_wbd %>% 
   select(region, country, mortality_rate, date) %>% 
   filter(date %in% c("2000","2016")) %>% 
-  pivot_wider(names_from = date, values_from = mortality_rate) %>% 
+  pivot_wider(names_from = date, 
+              values_from = mortality_rate) %>% 
   drop_na()
 
-names(new_merge_wbd)[3] <- "Y2000" #rename the year columns as they are hard to reference
+# rename the year columns as they are hard to reference
+names(new_merge_wbd)[3] <- "Y2000" 
 names(new_merge_wbd)[4] <- "Y2016"
 
+# find and plot the most improved countries in each region
+# as the improvement of mortality rate should be a decrease,
+# the lower the change, the more improvement
 most_improved_mortality_rate <- new_merge_wbd %>% 
   mutate(mort_impr = (Y2016 - Y2000)/Y2000) %>% 
   group_by(region) %>% 
+  
+  # select the maximums
   slice_min(order_by = mort_impr, n = 5) %>% 
+  
   ungroup() %>% 
-  ggplot(aes(x = mort_impr, y = reorder(country, mort_impr))) +
+  ggplot(aes(x = mort_impr, 
+             y = reorder(country, mort_impr))) +
   geom_col() +
   facet_wrap(~region, scales = "free") +
   labs(title = "5 Countries with the Most Improvement in Mortality Rate 2000-2016",
@@ -681,14 +222,21 @@ most_improved_mortality_rate <- new_merge_wbd %>%
        y = NULL) +
   theme_bw() +
   NULL
+
+# print
 most_improved_mortality_rate
 
+# find and plot the least improved countries in each region
 least_improved_mortality_rate <- new_merge_wbd %>% 
   mutate(mort_impr = (Y2016 - Y2000)/Y2000) %>% 
   group_by(region) %>% 
+  
+  # select the minimums
   slice_max(order_by = mort_impr, n = 5) %>% 
+  
   ungroup() %>% 
-  ggplot(aes(x = mort_impr, y = reorder(country, mort_impr))) +
+  ggplot(aes(x = mort_impr, 
+             y = reorder(country, mort_impr))) +
   geom_col() +
   facet_wrap(~region, scales = "free") +
   labs(title = "5 Countries with the Least Improvement in Mortality Rate 2000-2016",
@@ -697,19 +245,24 @@ least_improved_mortality_rate <- new_merge_wbd %>%
   theme_bw() +
   NULL
 
+# print
 least_improved_mortality_rate
 
 ```
+
+>**Interpretation:**
 > The mortality rate for under 5 shows a decreasing trend amongst all regions from 1960 to 2016. As for improvements over the years, because some countries lack data from 1960, we decide to compare data from 2016 to data 2000 to inlcude as many countries as possible to discover the improvements of mortality rate. A negative percentage change shows a country has improved/decreased its mortality rate, whereas a positive percentage change shows deterioration. Hence 5 countries' mortality rate deterioated during 2000-2016.
+
 
 5. Is there a relationship between primary school enrollment and fertility rate?
 ```{r, cache = TRUE}
-#plot the relationship between primary school enrollment and fertility rate
+# plot the relationship between primary school enrollment and fertility rate
 merge_wbd %>% 
   select(region, country, school_enroll, fertility_rate) %>%
   drop_na(., c(school_enroll, fertility_rate)) %>% 
   group_by(region, country) %>% 
-  ggplot(aes(x = school_enroll, y = fertility_rate)) +
+  ggplot(aes(x = school_enroll, 
+             y = fertility_rate)) +
   geom_point(size = 0.5, alpha = 0.3) +
   geom_smooth() +
   facet_wrap(~region, scales = "free") +
@@ -719,6 +272,15 @@ merge_wbd %>%
   theme_bw() +
   NULL
 ```
+
+>**Interpretation:**
 > There is a negative correlation between primary school enrollment and fertility rate in all regions.
 
+# Takeaway
+
+This analytic project mainly exercises the use of:\n
+
+- Library: `tidyverse`, `here`, `ggthemes`, `scales`.\n
+
+- Function: `ggplot`, `pivot_longer`, `pivot_wider`,`left_join`, `drop_na`, `names`.
 
