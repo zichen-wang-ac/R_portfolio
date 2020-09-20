@@ -84,7 +84,7 @@ disqusShortname = ""
     title = "Welcome to Zichen's R Portfolio"
     subtitle = "A Person in Lifetime Study"
     subtitle = "A Presentation Website Under Lifetime Construction"
-    buttonText = "View Highlights"
+ #   buttonText = "View Highlights"
 
 
   # Tiles Section
