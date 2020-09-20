@@ -50,7 +50,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
     [[params.navigation.links]]
       name = "About Me"
-      url = "blogs/blog1.md"
+      url = "blogs/blog1"
 
     [[params.navigation.links]]
      name = "Analytic Projects"
