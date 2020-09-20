@@ -56,7 +56,8 @@ library(rsample)
 library(ggridges)
 library(patchwork)
 library(kableExtra)
-library(patchwork)
+library(stringr)
+library(corrplot)
 options('huxtable.knit_print_df' = FALSE)
 ```
 
@@ -1398,6 +1399,6 @@ In the following model we've used variables in the linear or log format. However
 
 This analytic project mainly exercises the use of:\n
 
-- Library: `corrplot`, `dplyr`, `GGally`, `huxtable`, `patchwork`, `kableExtra`, `car`, `readr`, `rsample`, `ggridges`, `ggfortify`.\n
+- Library: `corrplot`, `dplyr`, `GGally`, `huxtable`, `patchwork`, `kableExtra`, `car`, `readr`, `rsample`, `ggridges`, `ggfortify`, `stringr`.\n
 
 - Function: `lm`, `autoplot`, `augment`,`kbl`, `tidy`, `ggpair`.
