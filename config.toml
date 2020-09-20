@@ -32,8 +32,8 @@ disqusShortname = ""
 
   # 404 error customization
   [params.error404]
-    heading = "Told You This Site Is In Construction"
-    text = "You may now go [back] (/)"
+    heading = "Told you this site is in construction..."
+    text = "You may now go [back](/)"
 
   # Navigation Section
   [params.navigation]
