@@ -2,7 +2,7 @@
 categories:
 - ""
 - ""
-description: "A short introduction to the owner of this portfolio - Me"
+description: "A short introduction of the owner of this portfolio - Zichen"
 draft: false
 keywords: ""
 slug: blog1

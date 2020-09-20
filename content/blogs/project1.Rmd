@@ -8,6 +8,8 @@ keywords: ""
 slug: "project1"
 title: World Bank Data Analysis
 output: html_document
+reading_time: true
+toc: true
 ---
 
 ```{r, setup, include = FALSE}
@@ -276,4 +278,5 @@ This analytic project mainly exercises the use of:\n
 - Library: `tidyverse`, `here`, `ggthemes`, `scales`.\n
 
 - Function: `ggplot`, `pivot_longer`, `pivot_wider`,`left_join`, `drop_na`, `names`.
+
 
