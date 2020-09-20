@@ -72,7 +72,6 @@ My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Ch
 The following journey will take a long time. To have a glance at our final findings, you can download our presentation deck [here](/blogs/Group_13_Presentation.pdf).
 
 
-
 # Executive Summary
 
 The purpose of this report is to produce a regression model which predicts the cost of a 4 night stay, for 2 people, in an Airbnb in Beijing. In order to do this, we progressed through four stages - firstly background research on the Beijing Airbnb market followed by Exploratory Data Analysis (EDA). During EDA, we viewed, cleaned, wrangled and visualised our data (specifically variability in the different independent variables and geographical mapping). Following this, we moved onto the third stage where we tested out different combinations of regressors and their functional forms to achieve a final model with the highest possible explanatory power. The process was iterative; we evaluated different variables on the basis of their t-stat value, marginal improvement in adjusted R-squared and residual standard error.
