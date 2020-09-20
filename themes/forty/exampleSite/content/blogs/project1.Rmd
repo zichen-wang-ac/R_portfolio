@@ -1,0 +1,289 @@
+---
+categories:
+- ""
+- ""
+description: "Project 1"
+draft: false
+keywords: ""
+slug: "project1"
+title: World Bank Data Analysis
+output:
+  html_document:
+    theme: flatly
+    highlight: zenburn
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    code_folding: show
+reading_time: false
+tags: ["blog1"]
+---
+
+```{r, setup, include = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, include = FALSE}
+library(tidyverse)
+library(mosaic)
+library(ggthemes)
+library(here)
+library(skimr)
+library(janitor)
+library(httr)
+library(readxl)
+```
+
+
+
+# About
+
+This project is part of the second group homework of [Applied Statistics with R](https://mam2021.netlify.app/) taught by Professor Kostis Christodoulou at **London Business School**.
+
+My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
+
+The project utilizes the following datasets:
+
+- Life expectancy at birth
+- [GDP per capita in constant 2010 US$](https://data.worldbank.org/indicator/NY.GDP.PCAP.KD)
+- [Female fertility: The number of babies per woman](https://data.worldbank.org/indicator/SP.DYN.TFRT.IN)
+- [Primary school enrollment as % of children attending primary school](https://data.worldbank.org/indicator/SE.PRM.NENR)
+- [Mortality rate, for under 5, per 1000 live births](https://data.worldbank.org/indicator/SH.DYN.MORT)
+- HIV prevalence (The estimated number of people living with HIV per 100 population of age group 15-49)
+
+# Let's do this
+
+Before we start to analyze the data, we must first retrieve the data. If connection permits, you can use a package called `wbstats` which contains the world bank data. If not, you can download the datasets by clicking on the underlined bullet points above to manually download the data, then you can following the steps below to load data locally.
+
+```{r, get_data, cache = TRUE}
+
+# load gapminder HIV and life Expectancy data, 
+# turn the data frames into one format
+hiv <- read_csv(here::here("data","adults_with_hiv_percent_age_15_49.csv")) %>% 
+    pivot_longer(cols = 2:34, 
+                 names_to = "date", 
+                 values_to = "hiv_prv")%>% 
+    mutate(date = as.numeric(date),
+           hiv_prv = as.numeric(hiv_prv))
+
+life_expectancy <- read_csv(here::here("data","life_expectancy_years.csv")) %>% 
+    pivot_longer(cols = 2:302, 
+                 names_to = "date", 
+                 values_to = "life_exp") %>% 
+    mutate(date = as.numeric(date),
+           life_exp = as.numeric(life_exp))
+
+# get World bank data from local due to the difficulty of connection
+worldbank_data <- read_csv(here::here("data","worldbank_data.csv"))
+
+# get a data frame of information regarding countries, indicators, sources, regions, indicator topics, lending types, income levels,  from the World Bank API 
+countries <-  read_csv(here::here("data","countries.csv"))
+```
+
+
+
+After we gather the data, we can merge the datasets together for further convenience. In data merging, there are multiple methods to use such as `left_join`, `merge`, and `mutate`+`match`. 
+
+```{r, merge_data, cache = TRUE}
+# merge the 3 data frames using left_join which is more efficient
+merge_wbd <- worldbank_data %>% 
+  # join the life expectancy and hiv data
+  # using "country" and "date" as the comparing key
+  left_join(., life_expectancy, by = c("country","date")) %>% 
+  left_join(., hiv, by = c("country", "date")) %>% 
+  # add a column of "region"
+  # using "country" as the comparing key
+  mutate(region = countries$region[match(country, countries$country)]) 
+
+# rename the hard-to-read columns
+names(merge_wbd)[names(merge_wbd) == "SP.DYN.TFRT.IN"] <- "fertility_rate"
+names(merge_wbd)[names(merge_wbd) == "NY.GDP.PCAP.KD"] <- "GDP_cap"
+names(merge_wbd)[names(merge_wbd) == "SE.PRM.NENR"] <- "school_enroll"
+names(merge_wbd)[names(merge_wbd) == "SH.DYN.MORT"] <- "mortality_rate"
+```
+
+After merging the data, we are now able to answer the following questions using `ggplot`, a crucial instrument to plot graphs.
+
+
+
+1. What is the relationship between HIV prevalence and life expectancy? 
+```{r, cache = TRUE}
+#plot the relationship between HIV prevalence and life expectancy
+ggplot(merge_wbd, aes(x = hiv_prv, y = life_exp)) + 
+  geom_point(size = 0.2) + 
+  geom_smooth(alpha = 0.5) +
+  facet_wrap(~region, scales = "free") +
+  theme_bw() +
+  labs(title = "Relationship Between Life Expectancy and HIV Prevalance",
+       x = "HIV Prevalance",
+       y = "Life Expectancy")
+```
+
+
+2. What is the relationship between fertility rate and GDP per capita? 
+```{r, cache = TRUE}
+#plot the relationship between fertility rate and GDP per capita
+ggplot(merge_wbd, aes(x = GDP_cap, y = fertility_rate)) + 
+  geom_point(size = 0.2) + 
+  geom_smooth() +
+  facet_wrap(~region, scales = "free") +
+  theme_bw() +
+  labs(title = "Relationship Between Fertility Rate and GDP per Capita",
+       x = "GDP per Capita",
+       y = "Fertility Rate") 
+```
+
+
+3. Which regions have the most observations with missing HIV data? 
+```{r, cache = TRUE}
+# package to format data in percentage
+library("scales")  
+
+# find the regions with most missing HIV data
+merge_wbd %>% 
+  select(country, region, date, hiv_prv) %>% 
+  group_by(region) %>% 
+  summarize(data_total = NROW(hiv_prv),
+            na_total = sum(is.na(hiv_prv)),
+            na_pct = scales::percent(round(na_total/data_total,2))) %>%
+  ungroup() %>% 
+  ggplot(aes(x = na_total, 
+             y = reorder(region, na_total))) + 
+  geom_col(width = 0.5) +
+  labs(title = "Europe & Central Asia Has The Most Missing Data in HIV", 
+       subtitle = "Number of Observations & Percentage of Total Regional Observation",
+       x = "Number of Missing HIV Data",
+       y = NULL) +
+  theme_bw(base_size = 12) +
+  ggrepel::geom_text_repel(aes(label = na_pct), 
+                           nudge_x = 1, size = 3) +
+  NULL
+```
+
+
+4. How has mortality rate for under 5 changed by region? In each region, what are the top 5 countries that have seen the greatest improvement, as well as those 5 countries where mortality rates have had the least improvement or even deterioration?
+```{r, cache = TRUE}
+# plot the child(under 5) mortality rate trend by regions
+merge_wbd %>% 
+  select(region, country, mortality_rate, date) %>% 
+  drop_na(., mortality_rate) %>% 
+  group_by(region, date) %>% 
+  summarize(mean_mort = mean(mortality_rate)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = date, y = mean_mort)) + 
+  geom_line() + 
+  facet_wrap(~region, scales = "free") +
+  labs(title = "Regional Child Mortality Rate Is Descending(1960 - 2016)",
+       x = NULL,
+       y = "Mean Mortality Rate") +
+  theme_bw() +
+  NULL
+
+# find the top 5 improved countries with data from 2000 to 2016 
+# as many countries do not have earlier data
+new_merge_wbd <- merge_wbd %>% 
+  select(region, country, mortality_rate, date) %>% 
+  filter(date %in% c("2000","2016")) %>% 
+  pivot_wider(names_from = date, 
+              values_from = mortality_rate) %>% 
+  drop_na()
+
+# rename the year columns as they are hard to reference
+names(new_merge_wbd)[3] <- "Y2000" 
+names(new_merge_wbd)[4] <- "Y2016"
+
+# find and plot the most improved countries in each region
+# as the improvement of mortality rate should be a decrease,
+# the lower the change, the more improvement
+most_improved_mortality_rate <- new_merge_wbd %>% 
+  mutate(mort_impr = (Y2016 - Y2000)/Y2000) %>% 
+  group_by(region) %>% 
+  
+  # select the maximums
+  slice_min(order_by = mort_impr, n = 5) %>% 
+  
+  ungroup() %>% 
+  ggplot(aes(x = mort_impr, 
+             y = reorder(country, mort_impr))) +
+  geom_col() +
+  facet_wrap(~region, scales = "free") +
+  labs(title = "5 Countries with the Most Improvement in Mortality Rate 2000-2016",
+       x = "Percentage Change of Mortality Rate",
+       y = NULL) +
+  theme_bw() +
+  NULL
+
+# print
+most_improved_mortality_rate
+
+# find and plot the least improved countries in each region
+least_improved_mortality_rate <- new_merge_wbd %>% 
+  mutate(mort_impr = (Y2016 - Y2000)/Y2000) %>% 
+  group_by(region) %>% 
+  
+  # select the minimums
+  slice_max(order_by = mort_impr, n = 5) %>% 
+  
+  ungroup() %>% 
+  ggplot(aes(x = mort_impr, 
+             y = reorder(country, mort_impr))) +
+  geom_col() +
+  facet_wrap(~region, scales = "free") +
+  labs(title = "5 Countries with the Least Improvement in Mortality Rate 2000-2016",
+       x = "Percentage Change of Mortality Rate",
+       y = NULL) +
+  theme_bw() +
+  NULL
+
+# print
+least_improved_mortality_rate
+
+```
+
+>**Interpretation:**
+> The mortality rate for under 5 shows a decreasing trend amongst all regions from 1960 to 2016. As for improvements over the years, because some countries lack data from 1960, we decide to compare data from 2016 to data 2000 to inlcude as many countries as possible to discover the improvements of mortality rate. A negative percentage change shows a country has improved/decreased its mortality rate, whereas a positive percentage change shows deterioration. Hence 5 countries' mortality rate deterioated during 2000-2016.
+
+
+5. Is there a relationship between primary school enrollment and fertility rate?
+```{r, cache = TRUE}
+# plot the relationship between primary school enrollment and fertility rate
+merge_wbd %>% 
+  select(region, country, school_enroll, fertility_rate) %>%
+  drop_na(., c(school_enroll, fertility_rate)) %>% 
+  group_by(region, country) %>% 
+  ggplot(aes(x = school_enroll, 
+             y = fertility_rate)) +
+  geom_point(size = 0.5, alpha = 0.3) +
+  geom_smooth() +
+  facet_wrap(~region, scales = "free") +
+  labs(title = "Negative Correlation Between Primary School Enrollment and Fertility Rate",
+       x = "Primary School Enrollment Rate",
+       y = "Fertility Rate") +
+  theme_bw() +
+  NULL
+```
+
+>**Interpretation:**
+> There is a negative correlation between primary school enrollment and fertility rate in all regions.
+
+# Takeaway
+
+This analytic project mainly exercises the use of:\n
+
+- Library: `tidyverse`, `here`, `ggthemes`, `scales`.\n
+
+- Function: `ggplot`, `pivot_longer`, `pivot_wider`,`left_join`, `drop_na`, `names`.
+
+

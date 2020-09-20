@@ -1,0 +1,364 @@
+---
+categories:
+- ""
+- ""
+description: "Project 3"
+draft: false
+keywords: ""
+slug: "project3"
+title: IBM HR Analytics
+---
+
+```{r, setup, include = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo = FALSE}
+# Load ggplot2, dplyr, and all the other tidyverse packages
+library(tidyverse)  
+library(mosaic)
+library(ggthemes)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+```
+
+# About
+
+This project is part of the first group homework of [Applied Statistics with R](https://mam2021.netlify.app/) taught by Professor Kostis Christodoulou at **London Business School**.
+
+My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
+
+
+# Let's do this
+
+We first get the HR data from local.
+
+```{r}
+# loading and viewing the HR dataset
+hr_dataset <- read_csv(here::here("data", 
+                                  "datasets_1067_1925_WA_Fn-UseC_-HR-Employee-Attrition.csv"))
+```
+
+Then we clean the dataset by assigning numerical data to more descriptive data.
+```{r}
+
+hr_cleaned <- hr_dataset %>% 
+  clean_names() %>% 
+  mutate(
+    education = case_when(
+      education == 1 ~ "Below College",
+      education == 2 ~ "College",
+      education == 3 ~ "Bachelor",
+      education == 4 ~ "Master",
+      education == 5 ~ "Doctor"
+    ),
+    environment_satisfaction = case_when(
+      environment_satisfaction == 1 ~ "Low",
+      environment_satisfaction == 2 ~ "Medium",
+      environment_satisfaction == 3 ~ "High",
+      environment_satisfaction == 4 ~ "Very High"
+    ),
+    job_satisfaction = case_when(
+      job_satisfaction == 1 ~ "Low",
+      job_satisfaction == 2 ~ "Medium",
+      job_satisfaction == 3 ~ "High",
+      job_satisfaction == 4 ~ "Very High"
+    ),
+    performance_rating = case_when(
+      performance_rating == 1 ~ "Low",
+      performance_rating == 2 ~ "Good",
+      performance_rating == 3 ~ "Excellent",
+      performance_rating == 4 ~ "Outstanding"
+    ),
+    work_life_balance = case_when(
+      work_life_balance == 1 ~ "Bad",
+      work_life_balance == 2 ~ "Good",
+      work_life_balance == 3 ~ "Better",
+      work_life_balance == 4 ~ "Best"
+    )
+  ) %>% 
+  select(age, attrition, daily_rate, department,
+         distance_from_home, education,
+         gender, job_role,environment_satisfaction,
+         job_satisfaction, marital_status,
+         monthly_income, num_companies_worked, percent_salary_hike,
+         performance_rating, total_working_years,
+         work_life_balance, years_at_company,
+         years_since_last_promotion)
+# print
+hr_cleaned
+```
+
+
+Below are some calculations to better understand the hr_cleaned dataset.
+
+```{r}
+# calculate attrition rate
+attrition_rate <- hr_cleaned %>% 
+  count(attrition) 
+  
+attrition_rate
+```
+
+Out of all the employees, 237 employees left and 1233 employees stayed. So the attrition rate is roughly 16.12% 
+
+Next, we try to understand the causal factors behind such an attrition rate by examining the different variables that could've influenced it. 
+
+``` {r}
+# view summary of 'age', 'years_at_company', 
+#'monthly_income' and 'years_since_last_promotion'. 
+summary(hr_cleaned$age)
+summary(hr_cleaned$years_at_company)
+summary(hr_cleaned$monthly_income)
+summary(hr_cleaned$years_since_last_promotion)
+
+# create a histogram to see the age distribution of all employees
+hr_plot_age <- hr_cleaned %>% 
+  ggplot(data = hr_cleaned, 
+         mapping = aes(
+           x = age, 
+           fill = age)) +
+  geom_histogram(binwidth = 2) +
+  labs(title = "Right Skewed Distribution of Age", 
+       x = "Age", 
+       y = "Frequency") + 
+  theme(legend.position = "none") +
+  NULL
+
+hr_plot_age
+
+# create a histogram to see the distribution of employment tenure - 
+# years for which employees have worked at IBM
+hr_plot_years <- hr_cleaned %>% 
+  ggplot(data = hr_cleaned, 
+         mapping = aes(
+           x = years_at_company, 
+           fill = years_at_company)) +
+  geom_histogram(binwidth = 2) +
+  labs(title = "Right Skewed Distribution of Years at Company", 
+       x = "Years at Company", 
+       y = "Frequency") + 
+  theme(legend.position = "none") +
+  NULL
+
+hr_plot_years
+
+# create a histogram to see the distribution 
+# of monthly income for all employees
+hr_plot_income <- hr_cleaned %>% 
+  ggplot(data = hr_cleaned, 
+         mapping = aes(
+           x = monthly_income, 
+           fill = monthly_income)) +
+  geom_histogram(binwidth = 200) +
+  labs(title = "Right Skewed Distribution of Monthly Income", 
+       x = "Monthly Income", 
+       y = "Frequency") + 
+  theme(legend.position = "none") +
+  NULL
+
+hr_plot_income
+
+# create a histogram to see the distribution of 
+#how many years have passed since employees were last promoted
+hr_plot_last_promotion <- hr_cleaned %>% 
+  ggplot(data = hr_cleaned, 
+         mapping = aes(
+           x = years_since_last_promotion, 
+           fill = years_since_last_promotion)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "Right Skewed Distribution of Years Since Last Promotion", 
+       x = "Years Since Last Promotion", 
+       y = "Frequency") + 
+  theme(legend.position = "none") +
+  NULL
+
+```
+
+To make things easier, we also order the descriptive variables in 'job_satisfaction' in an appropriate manner and calculate percentage for each of them.
+
+```{r}
+
+hr_cleaned$job_satisfaction <- factor(hr_cleaned$job_satisfaction,
+                                      levels = c("Low", "Medium", "High", "Very High"))
+
+job_satisfaction_percent <- hr_cleaned %>% 
+  count(job_satisfaction) %>% 
+  mutate(n/sum(n)*100)
+
+# plot a histogram for job satisfaction
+hr_plot_satisfaction <- hr_cleaned %>% 
+  ggplot(data = hr_cleaned, 
+         mapping = aes(x = job_satisfaction)) +
+  geom_bar(binwidth = 1) +
+  labs(title = "Distribution of Job Satisfaction", 
+       x = "Job Satisfaction", 
+       y = "Frequency") + 
+  theme(legend.position = "none") +
+  annotate("text", 
+           x = 1:4, 
+           y = 1000:1000:1000:1000, 
+           label = c("19.7%", "19.0%", "30.1%", "31.2%")) +
+  NULL
+
+hr_plot_satisfaction
+```
+
+In addition, we also order the descriptive variables in 'work_life_balance' appropriately 
+
+```{r}
+hr_cleaned$work_life_balance <- factor(hr_cleaned$work_life_balance,
+                                       levels  = c("Bad", "Good", "Better", "Best"))
+
+work_life_percent <- hr_cleaned %>% 
+  count(work_life_balance) %>%
+  mutate(n/sum(n)*100)
+
+# plot a histogram for distribution of work life balance across employees
+hr_plot_worklife <- hr_cleaned %>% 
+  ggplot(data = hr_cleaned, 
+         mapping = aes(x = work_life_balance)) +
+  geom_bar(binwidth = 1) +
+  labs(title = "Distribution of Work Life Balance", 
+       x = "Work Life Balance", 
+       y = "Frequency") + 
+  theme(legend.position = "none") +
+  annotate("text", 
+           x = 1:4, 
+           y=1000:1000:1000:1000, 
+           label = c("5.44%", "23.4%", "60.7%", "10.4%")) +
+  NULL
+
+hr_plot_worklife
+```
+
+Next, we examine the relationship between monthly income and other variables such as level of education, gender, job role, etc.
+
+```{r}
+# plot for monthly income and education
+ggplot(data = hr_cleaned, 
+       mapping = aes(
+         x = reorder(education, -monthly_income, FUN = median), 
+         y = monthly_income)) +
+  geom_boxplot() +
+  labs(title = "Relationship Between Monthly Income and Education", 
+       x = "Education", 
+       y = " Monthly Income") +
+  NULL
+
+# plot for monthly income and gender
+ggplot(data = hr_cleaned, 
+       mapping = aes(
+         x = gender, 
+         y = monthly_income)) +
+  geom_boxplot() +
+  labs(title = "Relationship Between Monthly Income and Gender", 
+       x = "Gender", 
+       y = " Monthly Income") +
+  NULL
+
+# plot for monthly income and job role
+ggplot(data = hr_cleaned, 
+       mapping = aes(
+         x = reorder(job_role, -monthly_income), 
+         y = monthly_income)) +
+  geom_boxplot() +
+  labs(title = "Relationship Between Monthly Income and Job Role", 
+       x = "Job Role", 
+       y = " Monthly Income") +
+  theme(axis.text.x = element_text(angle=60, hjust=1)) +
+  NULL
+```
+
+We calculate the median of monthly income by education level, and plot a bar chart to study the same.
+
+```{r}
+# calculate median 
+median_monthly_income <- hr_cleaned %>% 
+  group_by(education) %>% 
+  mutate(median(monthly_income))
+
+median_monthly_income
+
+# plot bar chart for median monthly income
+ggplot(data = hr_cleaned, 
+       mapping = aes(
+         x = reorder(education, monthly_income), 
+         y = median(monthly_income))) +
+  geom_col() +
+  labs(title = "Median Monthly Income by Education Level", 
+       x = "Education Level", 
+       y = "Monthly Income") +
+  NULL
+
+# The distribution of income is created and faceted by education level
+ggplot(data = hr_cleaned, 
+       mapping = aes(x = monthly_income)) +
+  geom_histogram() +
+  facet_wrap(~education) +
+  labs(title = "Distribution of Income by Education Level", 
+       x = "Monthly Income", 
+       y = "Frequency") +
+  theme_bw() +
+  NULL
+
+# The relationship between monthly income and age is identified and faceted by profession
+ggplot(data = hr_cleaned, 
+       mapping = aes(
+         x = monthly_income, 
+         y = age)) +
+  geom_point() +
+  facet_wrap(~job_role) +
+  labs(title = "Relationship Between Income and Age by Job Role", 
+       x = "Income", 
+       y = "Age") +
+  theme_bw() +
+  geom_smooth(se = FALSE) +
+NULL
+```
+
+The above plots highlight relationships between different variables in the dataset hr_cleaned.
+
+As seen in the dataset, the data provided from IBM shows an attrition rate of around 16%, indicating 84% of employees remained with the firm. 
+
+The variables of 'age', 'years at company', 'monthly income' and 'years since last promotion' are further analyzed to understand their distribution. The summary statistics alone can give us a good indication on if the distribution is not normal. However, it is hard to assert if the distribution is normal only from this data. In this case, by looking at the summary data the distributions of years at company / income / years since last promotion were not normal. However, to understand if age was a normal distribution, a histogram plot was required.
+
+Job satisfaction and work life balance were two variables that had distinct descriptive values. Plotting the distribution of job satisfaction showed that roughly two thirds of employees either had high or very high levels of job satisfaction. Just over one third had either medium or low levels of job satisfaction. Work life balance was far more fairly distributed with around three fifths of all employees stating they had better levels of work life balance and only one fifth claiming either the best or the worst work life balances. 
+
+Other variables of gender, job role and education level all influence the difference in income level for employees. The dataset shows that with a higher education status and job position, the employee is likely to have a larger monthly income. Females are seen to have a slightly larger median monthly income compared to males. A general trend of higher age correlates to higher income, which is reflected in all positions in the firm.
+
+
+# Takeaway
+
+This analytic project mainly exercises the use of:\n
+
+
+- Function: `case_when`, `summary`.
+
+
+
+
+
+
+
+
+
+
+
+
+

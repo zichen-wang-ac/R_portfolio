@@ -1,0 +1,240 @@
+---
+categories:
+- ""
+- ""
+description: "Project 2"
+draft: false
+keywords: ""
+slug: "project2"
+title: IMDB Movie Analysis
+---
+
+```{r, setup, include = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo = FALSE}
+# Load ggplot2, dplyr, and all the other tidyverse packages
+library(tidyverse)  
+library(mosaic)
+library(ggthemes)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+```
+
+# About
+
+This project is part of the first group homework of [Applied Statistics with R](https://mam2021.netlify.app/) taught by Professor Kostis Christodoulou at **London Business School**.
+
+My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
+
+
+# Let's do this
+
+We first get a sample of movies from the IMDB 5000 movie dataset.
+  
+```{r,load_movies, warning=FALSE, message=FALSE, eval=FALSE}
+# The movie dataset is taken from the csv file "movies.csv"
+movies <- read_csv(here::here("data", "movies.csv"))
+
+# view the dataset
+glimpse(movies)
+head(movies)
+skim(movies)
+```
+
+As per the above, there appears to be no missing values, however there were 54 duplicate observations. 
+
+```{r, duplicated_values}
+movies <- read_csv(here::here("data", "movies.csv"))
+
+# remove duplicates via distinct
+skim(distinct(movies,title, keep_all = FALSE))
+```
+
+Next, we create a table of the number of movies by genre. 
+
+``` {r}
+movies_table <- movies %>% 
+  count(genre, 
+        wt = NULL, 
+        sort = TRUE)
+# print
+movies_table
+```
+
+Return on budget is calculated as the ratio between how much money a film made compared to the budget used during production
+
+``` {r}
+# calculate average return on budget 
+# for each genre and displaying results in a table
+gross_budget <- movies %>% 
+  group_by(genre) %>% 
+  summarise(average_gross = mean(gross,na.rm = TRUE),
+            average_budget = mean(budget,na.rm = TRUE)) %>% 
+  mutate(return_on_budget = average_gross/average_budget) %>% 
+  arrange(desc(return_on_budget))
+
+gross_budget
+```
+
+Next, we analyze the gross earnings of the top 15 directors (ranked by total earnings of the movies they produced).
+
+``` {r}
+# calculate total gross earnings and mean, median and standard deviation by director
+gross_directors <- movies %>% 
+  group_by(director) %>% 
+  summarise(total_gross = sum(gross,na.rm = TRUE), 
+            mean_gross = mean(gross,na.rm = TRUE), 
+            median_gross = median(gross,na.rm = TRUE), 
+            std_dev_gross = sd(gross,na.rm = TRUE)) %>% 
+  
+  # select the top 15 items
+  top_n(15,total_gross) %>% 
+  
+  # arrange the items in descending order of total gross
+  arrange(desc(total_gross))
+
+gross_directors
+```
+
+We also review the ratings of all the movies by genre and create table with other details. 
+
+``` {r, fig.width=20,fig.height=20}
+# calculate minimum, maximum, average, median and standard deviations of ratings by genre
+ratings_table <- movies %>% 
+  group_by(genre) %>% 
+  summarise(max_rating = max(rating), 
+            min_rating = min(rating,na.rm = FALSE), 
+            mean_rating = mean(rating,na.rm = TRUE), 
+            median_rating = median(rating,na.rm = TRUE), 
+            std_dev_rating = sd(rating,na.rm = TRUE)) %>%
+  arrange(genre)
+
+# display results in a table
+ratings_table
+
+# plote a histogram showing the distribution of ratings by genre
+ratings_plot <- movies %>% 
+  ggplot(data = movies, 
+         mapping = aes(
+           x = rating, 
+           fill = genre)) +
+  geom_histogram(binwidth = 0.7) +
+  facet_wrap(~genre) +
+  labs(title = "Distribution of Ratings by Genre", 
+       x = "Rating", 
+       y = "Frequency") + 
+  theme(legend.position = "none") +
+  NULL
+
+ratings_plot
+```
+
+To determine whether there is a relationship between number of facebook likes the cast of a movie receives and the gross earnings of that movie, we plot the data as below -
+
+```{r, gross_on_fblikes, }
+
+# constructing a scatter plot 
+  ggplot(data = movies, 
+         mapping = aes(
+           x = cast_facebook_likes, 
+           y = gross)) +
+  
+  # Alpha of 0.2 is used to see 
+  #where there is a cluster of data points on the plot. 
+  #As there are a few outliers, 
+  #the x variable of Cast Facebook Likes 
+  #is restricted from 0 to 200,000.
+  geom_point(alpha = 0.2) +
+  labs(title = "Relationship Between Gross Earnings and Cast Facebook Likes ", 
+       x = "Cast Facebook Likes", 
+       y = "Gross",
+       # this forces R not to use exponential notation
+       options(scipen = 999)) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_x_continuous(limits = c(0,200000)) +
+  scale_y_continuous() +
+  geom_smooth() +
+  NULL
+
+
+```
+
+Examining the plot, we can conclude that that Cast Facebook Likes is not a good predictor of gross movie revenue. There is no clear trend with a varying amount of movie revenue earned per amount of Facebook Cast Likes. 
+
+Let's see if another variable portrays better correlation with gross revenue.
+
+```{r, gross_on_budget}
+# create a scatter plot for budget and gross revenue 
+ggplot(data = movies, 
+       mapping = aes(
+         x = budget, 
+         y = gross)) +
+  geom_point(alpha = 0.2) +
+  labs(title = "Relationship Between Gross Earnings and Budget ", 
+       x = "Budget", 
+       y = "Gross",
+       options(scipen = 999)) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_smooth() +
+  NULL
+```
+
+As seen in the plot above, budget is a better indicator to determine gross revenue for each movie, however it is far from being a perfect indicator. For each budget value, there is a wide spread of values for gross revenue. However, it is clear that with a low budget, a movie is likely to have low gross revenue. 
+
+Let us also check if ratings are a good indicator of gross revenue a movie earns.
+
+```{r, gross_on_rating}
+# plot ratings and gross earnings of movies faceted by genre
+ggplot(data = movies, 
+       mapping = aes(
+         x = rating, 
+         y = gross)) +
+  geom_point(alpha = 0.2) +
+  labs(title = "Relationship Between Gross Earnings and Ratings ", 
+       x = "Rating", 
+       y = "Gross") + 
+  geom_smooth() +
+  facet_wrap(~genre) +
+  scale_y_continuous(labels = scales::comma) +
+  NULL
+```
+
+As seen above there are varying relationships developed for IMDB rating and gross revenue for each genre.
+
+Genres that have the largest data such as action, comedy and drama show that as ratings increase, there is more gross revenue. Action in particular highlights this relationship. However there are a few genres with limited data points where no relationship can be established such as Musical, Romance, Thriller and Western.
+
+We think this such correlation and lack of data points also has something to do with the popularity of each genre. In less popular genres such as Documentary, irrespective of the ratings, the gross earnings remain more or less constant. In more popular genres such as Action and Adventure, higher ratings are relatively more correlated with earnings.  
+
+# Takeaway
+
+This analytic project mainly exercises the use of:\n
+
+- Function: `ggplot`, `top_n`, `arrange`, `options(scipen = 999)`.
+
+
+
+
+
+
+
+
+
+
+
