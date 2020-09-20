@@ -95,7 +95,7 @@ disqusShortname = ""
       title = "Project 1"
       subtitle = "Life & HIV"
       image = "pic01.jpg"
-      url = "homework2.Rmd"
+      url = "homework2.html"
 
     [[params.tiles.showcase]]
       title = "Tempus"
