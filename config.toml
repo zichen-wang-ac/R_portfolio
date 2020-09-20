@@ -49,23 +49,12 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
       url = "#"
 
     [[params.navigation.links]]
-      name = "Analytic Highlights"
-      url = "blogs"
-
-#    [[params.navigation.links]]
-#      name = "Analytic "
-#      url = "blogs/ipsum"
+      name = "About Me"
+      url = "blogs/blog1.md"
 
     [[params.navigation.links]]
      name = "Analytic Projects"
-     url = "elements.html"
-
-    # Add custom links here by uncommenting code below. To remove links just delete
-    # the [[params.navigation.links]] map associated with that link. Copy and paste
-    # code below if you need more links. Buttons work in the same way.
-    # [[params.navigation.links]]
-    #    name = "NameOfLink"
-    #    url = "UrlOfLink"
+     url = "blogs"
 
     # Button Style 1
 #    [[params.navigation.button1]]
@@ -83,8 +72,9 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
     title = "Welcome to Zichen's R Portfolio"
-    subtitle = "A Person in Lifetime Study .\n   A Presentation Website Under Lifetime Construction"
-    buttonText = "View Highlights"
+    subtitle = """A Person in Lifetime Study.
+    A Presentation Website Under Lifetime Construction""""
+    buttonText = "Know More"
 
 
   # Tiles Section
