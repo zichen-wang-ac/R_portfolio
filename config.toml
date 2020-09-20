@@ -124,11 +124,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
   # Section Type One
   [params.one]
-    enable = true
+    enable = false
     title = "R Portfolio"
     subtitle = """Established during the first course Applied Statistics with R of Zichen in her Masters in Analytics and Management program London Business School, this website is dedicated to her projects within the course and will further develope with more projects beyond the course.
-    The course represented the beginning of her journey in R, and this website will show you how the journey began.
-    """
+    The course represented the beginning of her journey in R, and this website will show you how the journey began."""
 
 
   # Contact section
