@@ -16,7 +16,7 @@ output:
     toc_float: yes
     code_folding: show
 reading_time: false
-tags: ["blog1"]
+tags: [project2, project3, project4]
 ---
 
 ```{r, setup, include = FALSE}
