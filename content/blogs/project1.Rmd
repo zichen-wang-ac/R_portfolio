@@ -7,9 +7,14 @@ draft: false
 keywords: ""
 slug: "project1"
 title: World Bank Data Analysis
-output: html_document
+output:
+  html_document:
+    highlight: zenburn
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    code_folding: show
 reading_time: true
-toc: true
 ---
 
 ```{r, setup, include = FALSE}
