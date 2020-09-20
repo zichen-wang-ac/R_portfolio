@@ -90,7 +90,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
       title = "World Bank Data Analysis"
       subtitle = "Life Expectancy, HIV Prevalence, GDP, and Mortality Rate"
       image = "pic01.jpg"
-      url = "blogs/project1.Rmd"
+      url = "blogs/project1"
 
     [[params.tiles.showcase]]
       title = "Tempus"
