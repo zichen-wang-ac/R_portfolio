@@ -228,7 +228,7 @@ data_cleaned <- listings %>%
     
 # Allowing for differences in spelling and upper/lowercases 
     
-    str_detect(amenities, "wifi") ~ TRUE,
+      str_detect(amenities, "wifi") ~ TRUE,
       TRUE ~ FALSE
       ),
 
@@ -1400,4 +1400,4 @@ This analytic project mainly exercises the use of:\n
 
 - Library: `corrplot`, `dplyr`, `GGally`, `huxtable`, `patchwork`, `kableExtra`, `car`, `readr`, `rsample`, `ggridges`, `ggfortify`.\n
 
-- Function: `lm`, `autoplot`, `augment`,`kbl`, `tidy`.
+- Function: `lm`, `autoplot`, `augment`,`kbl`, `tidy`, `ggpair`.
