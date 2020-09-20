@@ -92,8 +92,8 @@ disqusShortname = ""
     # Display your showcases here.
     
     [[params.tiles.showcase]]
-      title = "Aliquam"
-      subtitle = "Ipsum Dolor Sit Amet"
+      title = "Project 1"
+      subtitle = "Life & HIV"
       image = "pic01.jpg"
       url = "homework2.Rmd"
 
