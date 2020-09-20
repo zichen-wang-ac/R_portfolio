@@ -2,7 +2,7 @@
 ---
 title: "Session 4: Homework 2"
 author: "Study Group 13"
-date: "`r Sys.Date()`"
+date: "Sep 20, 2020"
 output:
   html_document:
     theme: flatly
