@@ -82,8 +82,7 @@ disqusShortname = ""
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
     title = "Welcome to Zichen's R Portfolio"
-    subtitle = "A Person in Lifetime Study"
-    subtitle = "A Presentation Website Under Lifetime Construction"
+    subtitle = "A Person in Lifetime Study\n A Presentation Website Under Lifetime Construction"
  #   buttonText = "View Highlights"
 
 
@@ -96,7 +95,7 @@ disqusShortname = ""
       title = "Aliquam"
       subtitle = "Ipsum Dolor Sit Amet"
       image = "pic01.jpg"
-      url = "homework3.Rmd"
+      url = "homework2.Rmd"
 
     [[params.tiles.showcase]]
       title = "Tempus"
