@@ -134,7 +134,7 @@ hr_plot_age <- hr_cleaned %>%
            x = age, 
            fill = age)) +
   geom_histogram(binwidth = 2) +
-  labs(title = "Distribution of Age", 
+  labs(title = "Right Skewed Distribution of Age", 
        x = "Age", 
        y = "Frequency") + 
   theme(legend.position = "none") +
@@ -150,7 +150,7 @@ hr_plot_years <- hr_cleaned %>%
            x = years_at_company, 
            fill = years_at_company)) +
   geom_histogram(binwidth = 2) +
-  labs(title = "Distribution of Years at Company", 
+  labs(title = "Right Skewed Distribution of Years at Company", 
        x = "Years at Company", 
        y = "Frequency") + 
   theme(legend.position = "none") +
@@ -166,7 +166,7 @@ hr_plot_income <- hr_cleaned %>%
            x = monthly_income, 
            fill = monthly_income)) +
   geom_histogram(binwidth = 200) +
-  labs(title = "Distribution of Monthly Income", 
+  labs(title = "Right Skewed Distribution of Monthly Income", 
        x = "Monthly Income", 
        y = "Frequency") + 
   theme(legend.position = "none") +
@@ -182,13 +182,12 @@ hr_plot_last_promotion <- hr_cleaned %>%
            x = years_since_last_promotion, 
            fill = years_since_last_promotion)) +
   geom_histogram(binwidth = 1) +
-  labs(title = "Distribution of Years Since Last Promotion", 
+  labs(title = "Right Skewed Distribution of Years Since Last Promotion", 
        x = "Years Since Last Promotion", 
        y = "Frequency") + 
   theme(legend.position = "none") +
   NULL
 
-hr_plot_last_promotion
 ```
 
 To make things easier, we also order the descriptive variables in 'job_satisfaction' in an appropriate manner and calculate percentage for each of them.
@@ -350,6 +349,9 @@ This analytic project mainly exercises the use of:\n
 
 
 - Function: `case_when`, `summary`.
+
+
+
 
 
 
