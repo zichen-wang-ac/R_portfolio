@@ -76,8 +76,8 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
     title = "Welcome to Zichen's R Portfolio"
-    subtitle = """A Person in Lifetime Study.
-    A Presentation Website Under Lifetime Construction"""
+    subtitle = """A Person in Lifetime Study. \n
+    A Presentation Website Under Lifetime Construction."""
     buttonText = "Know More"
 
 
@@ -140,19 +140,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     # Since this template is static, the contact form uses www.formspree.io as a
     # proxy. The form makes a POST request to their servers to send the actual
     # email. Visitors can send up to a 1000 emails each month for free.
-    #
-    # What you need to do for the setup?
-    #
-    # - set your email address under 'email' below and uncomment
-    # - upload the generated site to your server
-    # - send a dummy email yourself to confirm your account
-    # - click the confirm link in the email from www.formspree.io
-    # - you're done. Happy mailing!
+    # To register to receive visitors' messages
     formEmail = "zwang.mam2021@london.edu"
 
     # Contact Section
-    # You can add multiple emails, phone numbers, or addresses
-    # by copying the corresponding map with frontmatter code.
     [[params.contact.email]]
     title = "Email"
     email = "zwang.mam2021@london.edu"
