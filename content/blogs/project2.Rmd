@@ -12,7 +12,7 @@ output:
     code_folding: show
 ---
 
-```{r, setup}
+```{r, setup, include = FALSE}
 knitr::opts_chunk$set(
   message = FALSE, 
   warning = FALSE, 
@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+```{r load-libraries, warning=FALSE, message=FALSE, echo = FALSE}
 # Load ggplot2, dplyr, and all the other tidyverse packages
 library(tidyverse)  
 library(mosaic)
