@@ -11,6 +11,10 @@ image: me.jpg
 output: html_document
 ---
 
-Hi, welcome to the analytic world of Zichen.
+Hi, welcome to the R analytic world of Zichen.
 
-Yes, I am Zichen, **Zichen WANG**, a girl from Beijing, China.
+I am Zichen, **Zichen WANG**, a girl from Beijing, China.
+
+I just began my adventure on data analytics. There's still a long story to tell you about how I got here.
+
+If you are interested, find me and let's chat ;).

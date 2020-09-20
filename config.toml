@@ -103,6 +103,12 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
       subtitle = "Job Satisfaction, Work Life Balance, Gender..."
       image = "ibm.png"
       url = "blogs/project3"
+      
+    [[params.tiles.showcase]]
+      title = "Price Prediction Model of Airbnb Beijing"
+      subtitle = "What is the most relevance determinant?"
+      image = "Airbnb.jpg"
+      url = "blogs/project4"
 
 
   [params.blog]
@@ -121,11 +127,9 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   [params.two]
     enable = true
     title = "R Portfolio"
-    subtitle = """Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. 
-    Mauris aliquet magna magna sed nunc rhoncus pharetra. 
-    Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. 
-    Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero.
-    Mauris aliquet magna magna sed nunc rhoncus amet pharetra et feugiat tempus."""
+    subtitle = """Established during the first course [Applied Statistics with R](https://mam2021.netlify.app/) of Zichen in her Masters in Analytics and Management program London Business School, this website is dedicated to her projects within the course and will further develope with more projects beyond the course.
+    The course represented the beginning of her journey in R, and this website will show you how the journey began.
+    """
     buttonText = "View Projects"
     url = "blogs"
 
