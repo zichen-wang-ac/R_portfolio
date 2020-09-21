@@ -69,7 +69,7 @@ This project is the final group project of [Applied Statistics with R](https://m
 
 My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
 
-The following journey will take a long time. To have a glance at our final findings, you can download our presentation deck [here](project4_files/roup_13_Presentation.pdf). [here](url)
+The following journey will take a long time. To have a glance at our final findings, you can download our presentation deck [here](/project4_files/roup_13_Presentation.pdf).
 
 
 # Executive Summary
