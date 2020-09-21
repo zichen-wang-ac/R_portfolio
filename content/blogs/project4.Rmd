@@ -69,7 +69,7 @@ This project is the final group project of [Applied Statistics with R](https://m
 
 My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
 
-The following journey will take a long time. To have a glance at our final findings, you can download our presentation deck [here](/project4_files/roup_13_Presentation.pdf).
+The following journey will take a long time. To have a glance at our final findings, you can download our presentation deck [here]({{< ref "/project4_files/roup_13_Presentation.pdf" >}} "deck").
 
 
 # Executive Summary
@@ -82,7 +82,7 @@ Having decided our final model with an explanatory power of **54.4%**, we genera
 
 The concept of *homestays* first appeared in China in 2011, when the concept of sharing economy began to spread to China. After 8-9 years of market education, today, this concept of sharing economy is deeply rooted in the hearts of Chinese people. Dwelled in this economy, people became more willing to utilize their spare homes and join the homestay host ranks. Meanwhile, various tourism policies in China have mentioned encouraging the development of characteristic homestays since 2015 and will continue to favor the homestay industry in the next 3-5 years. In the future, the government will keep encouraging the effective use of personal idle properties and support the development of homestays.
 
-The economy reshaped not only people's home usage preference but also their travel accommodation preference. Homestay has turned from hotel's complement to substitution, with its great cost performance, various modern interior design, and high suitability for family trips. The current distribution of homestays is consistent with the overall development of China's tourism industry. Homestays concentrate in areas where the tourism industry is relatively developed, like the East and South of China. Beijing has dominated the listing rank with over 3500 listings [2018, Homestay Investment and Investment, China Commercial Industry Research Institute](http://www.ce.cn/culture/gd/201804/08/t20180408_28747634.shtml). 
+The economy reshaped not only people's home usage preference but also their travel accommodation preference. Homestay has turned from hotel's complement to substitution, with its great cost performance, various modern interior design, and high suitability for family trips. The current distribution of homestays is consistent with the overall development of China's tourism industry. Homestays concentrate in areas where the tourism industry is relatively developed, like the East and South of China. Beijing has dominated the listing rank with over 3500 listings ([2018, Homestay Investment and Investment, China Commercial Industry Research Institute](http://www.ce.cn/culture/gd/201804/08/t20180408_28747634.shtml)). 
 
 Currently, Airbnb is one of the major players in the Chinese B2B homestay industry. It is advantaged by its international identity, reaching 110% and 250% respective growth rate of outbound travel through Airbnb and the number of people staying in domestic listings in China. However, it is also encountering challenges from local competitors in the battle of localizing and meeting the demand of the sinking market--the new focal point of all industries.
 
