@@ -80,7 +80,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     # To change the background image on the homepage banner, replace 'banner.jpg' in
     # the 'static/img' folder.
     title = "Welcome to Zichen's R Portfolio"
-    subtitle = """A Person in Lifetime Study. \n
+    subtitle = """A Person in Lifetime Study.\n  
     A Presentation Website Under Lifetime Construction."""
     buttonText = "Know More"
 
@@ -126,11 +126,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   [params.two]
     enable = true
     title = "R Portfolio"
-    subtitle = """Established during the first course Applied Statistics with R of Zichen in her Masters in Analytics and Management program London Business School, this website is dedicated to her projects within the course and will further develope with more projects beyond the course.
-    The course represented the beginning of her journey in R, and this website will show you how the journey began."""
+    subtitle = """Established during the course Applied Statistics with R in Masters in Analytics and Management program at London Business School, this website is dedicated to showcase the in-clas projects and will further develope with more projects beyond the course.
+    The course represented the beginning of Zichen's journey with R, and this website will show you how the journey began."""
     buttonText = "View Projects"
-    url = "blogs/roup_13_Presentation"
-    
+    url = "#"
 
 
   # Contact section
