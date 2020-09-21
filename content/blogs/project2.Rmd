@@ -1,12 +1,13 @@
 ---
+title: IMDB Movie Analysis
+date: '2020-10-31T21:28:43-05:00'
+description: "Project 2"
+draft: no
+keywords: ""
+slug: "project2"
 categories:
 - ""
 - ""
-description: "Project 2"
-draft: false
-keywords: ""
-slug: "project2"
-title: IMDB Movie Analysis
 ---
 
 ```{r, setup, include = FALSE}
