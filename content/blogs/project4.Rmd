@@ -2,10 +2,10 @@
 categories:
 - "file"
 - "project"
-description: "Project 1"
+description: "Project 4"
 draft: false
 keywords: ""
-slug: "project1"
+slug: "project4"
 title: Price Prediction Model for Airbnb in Beijing
 output:
   html_document:
@@ -383,7 +383,7 @@ p1a + p2a + p3a + p4a + p5a + p6a + p7a + p8a + p9a + p10a + p11a +
 
 ```
 
-```{r, fig.width=15, fig.height=15}
+```{r, fig.width=15, fig.height=15, eval=F}
 
 # using ggpairs to plot a correlation matrix
 data_cleaned %>% 
@@ -494,7 +494,7 @@ p12 + p13 + p14 + p15 +
 
 ### Preliminary Correlation Analysis
 
-```{r}
+```{r, cache=TRUE}
 
 #Here we can explore the correlation between our numerical variables
 
@@ -514,7 +514,7 @@ data_numerical <- data_cleaned %>%
            bathrooms, 
            bedrooms))
 
-data_numerical
+# data_numerical
 
 #Next we use a corrplot to visualise the correlations between variables
 
