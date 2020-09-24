@@ -155,8 +155,8 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
     [[params.contact.address]]
     title = "Address"
-    street = "Baker Street"
-    city = "London, ST 00000"
+    street = "Sussex Place, Regent's Park"
+    city = "London, NW1 4SA"
     country = "United Kingdom"
 
   # Footer section
