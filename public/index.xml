@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Zichen&#39;s R Portfolio</title>
+    <title>Zichen&#39;s Portfolio</title>
     <link>/</link>
-    <description>Recent content on Zichen&#39;s R Portfolio</description>
+    <description>Recent content on Zichen&#39;s Portfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 31 Oct 2017 22:42:51 -0500</lastBuildDate>
+    <lastBuildDate>Sat, 31 Oct 2020 21:28:43 -0500</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>IMDB Movie Analysis</title>
+      <link>/blogs/project2/</link>
+      <pubDate>Sat, 31 Oct 2020 21:28:43 -0500</pubDate>
+      
+      <guid>/blogs/project2/</guid>
+      <description>About This project is part of the first group homework of Applied Statistics with R taught by Professor Kostis Christodoulou at London Business School.
+My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
+ Let’s do this We first get a sample of movies from the IMDB 5000 movie dataset.
+# The movie dataset is taken from the csv file &amp;quot;movies.csv&amp;quot; movies &amp;lt;- read_csv(here::here(&amp;quot;data&amp;quot;, &amp;quot;movies.</description>
+    </item>
     
     <item>
       <title>Aliquam</title>
@@ -39,15 +51,6 @@
     </item>
     
     <item>
-      <title>Ipsum</title>
-      <link>/blogs/ipsum/</link>
-      <pubDate>Tue, 31 Oct 2017 21:28:43 -0500</pubDate>
-      
-      <guid>/blogs/ipsum/</guid>
-      <description>Nullam et orci eu lorem consequat tincidunt vivamus et sagittis magna sed nunc rhoncus condimentum sem. In efficitur ligula tate urna. Maecenas massa sed magna lacinia magna pellentesque lorem ipsum dolor. Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis tempus.</description>
-    </item>
-    
-    <item>
       <title>Hello R Markdown</title>
       <link>/post/2015-07-23-r-rmarkdown/</link>
       <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
@@ -56,6 +59,54 @@
       <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
 You can embed an R code chunk like this:
 summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+    </item>
+    
+    <item>
+      <title>About Me</title>
+      <link>/blogs/blog1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog1/</guid>
+      <description>Hi, welcome to the R analytic world of Zichen.
+I am Zichen WANG, from Beijing, China.
+I recently graduated from ESSEC Business School and currently study at London Business School. I turned from Bachelor of Business Administration major to Masters in Analytics and Management.
+Data Analytics will be my new focal point of life.
+I just began my adventure on data analytics. There&amp;rsquo;s still a long story to tell you about how I got here(and a even longer story about where I will go).</description>
+    </item>
+    
+    <item>
+      <title>IBM HR Analytics</title>
+      <link>/blogs/project3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/project3/</guid>
+      <description>About This project is part of the first group homework of Applied Statistics with R taught by Professor Kostis Christodoulou at London Business School.
+My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
+ Let’s do this We first get the HR data from local.
+# loading and viewing the HR dataset hr_dataset &amp;lt;- read_csv(here::here(&amp;quot;data&amp;quot;, &amp;quot;datasets_1067_1925_WA_Fn-UseC_-HR-Employee-Attrition.csv&amp;quot;)) Then we clean the dataset by assigning numerical data to more descriptive data.</description>
+    </item>
+    
+    <item>
+      <title>Price Prediction Model for Airbnb in Beijing</title>
+      <link>/blogs/project4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/project4/</guid>
+      <description>About This project is the final group project of Applied Statistics with R taught by Professor Kostis Christodoulou at London Business School.
+My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
+The following journey will take a long time. To have a glance at our final findings, you can download our presentation deck here.</description>
+    </item>
+    
+    <item>
+      <title>World Bank Data Analysis</title>
+      <link>/blogs/project1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/project1/</guid>
+      <description>About This project is part of the second group homework of Applied Statistics with R taught by Professor Kostis Christodoulou at London Business School.
+My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
+The project utilizes the following datasets:
+ Life expectancy at birth GDP per capita in constant 2010 US$ Female fertility: The number of babies per woman Primary school enrollment as % of children attending primary school Mortality rate, for under 5, per 1000 live births HIV prevalence (The estimated number of people living with HIV per 100 population of age group 15-49)   Let’s do this Before we start to analyze the data, we must first retrieve the data.</description>
     </item>
     
   </channel>

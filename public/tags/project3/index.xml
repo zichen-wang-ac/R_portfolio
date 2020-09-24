@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>project3 on Zichen&#39;s Portfolio</title>
+    <link>/tags/project3/</link>
+    <description>Recent content in project3 on Zichen&#39;s Portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="/tags/project3/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>World Bank Data Analysis</title>
+      <link>/blogs/project1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/project1/</guid>
+      <description>About This project is part of the second group homework of Applied Statistics with R taught by Professor Kostis Christodoulou at London Business School.
+My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
+The project utilizes the following datasets:
+ Life expectancy at birth GDP per capita in constant 2010 US$ Female fertility: The number of babies per woman Primary school enrollment as % of children attending primary school Mortality rate, for under 5, per 1000 live births HIV prevalence (The estimated number of people living with HIV per 100 population of age group 15-49)   Let’s do this Before we start to analyze the data, we must first retrieve the data.</description>
+    </item>
+    
+  </channel>
+</rss>

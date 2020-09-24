@@ -1,0 +1,457 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="To Be A Data Analyst">
+	<meta name="author" content="Zichen WANG">
+	<meta name="generator" content="Hugo 0.74.3" />
+	<title>IMDB Movie Analysis &middot; Zichen&#39;s Portfolio</title>
+	<!-- Stylesheets -->
+	
+	<link rel="stylesheet" href="/css/main.css"/>
+	
+	
+
+	
+
+	<!-- Custom Fonts -->
+	<link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/ie/html5shiv.js"></script>
+	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
+	<![endif]-->
+</head>
+
+    <body>
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+    <header id="header" class="alt">
+        <a href="/" class="logo"><strong> Zichen W | R Portfolio </strong> <span>Est. 2020</span></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+
+<!-- Menu -->
+    <nav id="menu">
+        <ul class="links">
+            
+                <li><a href="/">Home</a></li>
+            
+                <li><a href="/blogs/blog1">About Me</a></li>
+            
+                <li><a href="/blogs/project1">World Bank Data Analysis</a></li>
+            
+                <li><a href="/blogs/project2">IMDB Movie Analysis</a></li>
+            
+                <li><a href="/blogs/project3">IBM HR Analytics</a></li>
+            
+                <li><a href="/blogs/project4">Airbnb Price Model</a></li>
+            
+
+        </ul>
+        <ul class="actions vertical">
+            
+                <li><a href="/" class="button special fit">Contact Me</a></li>
+            
+            
+        </ul>
+    </nav>
+
+        <!-- Main -->
+            <div id="main" class="alt">
+
+                
+                    <section id="one">
+                        <div class="inner">
+                            <header class="major">
+                                <h1>IMDB Movie Analysis</h1>
+                            </header>
+                            
+                            
+
+
+<div id="about" class="section level1">
+<h1>About</h1>
+<p>This project is part of the first group homework of <a href="https://mam2021.netlify.app/">Applied Statistics with R</a> taught by Professor Kostis Christodoulou at <strong>London Business School</strong>.</p>
+<p>My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)</p>
+</div>
+<div id="lets-do-this" class="section level1">
+<h1>Let’s do this</h1>
+<p>We first get a sample of movies from the IMDB 5000 movie dataset.</p>
+<pre class="r"><code># The movie dataset is taken from the csv file &quot;movies.csv&quot;
+movies &lt;- read_csv(here::here(&quot;data&quot;, &quot;movies.csv&quot;))
+
+# view the dataset
+glimpse(movies)
+head(movies)
+skim(movies)</code></pre>
+<p>As per the above, there appears to be no missing values, however there were 54 duplicate observations.</p>
+<pre class="r"><code>movies &lt;- read_csv(here::here(&quot;data&quot;, &quot;movies.csv&quot;))
+
+# remove duplicates via distinct
+skim(distinct(movies,title, keep_all = FALSE))</code></pre>
+<table>
+<caption>(#tab:duplicated_values)Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">distinct(movies, title, k…</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">2907</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">logical</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">title</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">83</td>
+<td align="right">0</td>
+<td align="right">2907</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: logical</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="left">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">keep_all</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="left">FAL: 2907</td>
+</tr>
+</tbody>
+</table>
+<p>Next, we create a table of the number of movies by genre.</p>
+<pre class="r"><code>movies_table &lt;- movies %&gt;% 
+  count(genre, 
+        wt = NULL, 
+        sort = TRUE)
+# print
+movies_table</code></pre>
+<pre><code>## # A tibble: 17 x 2
+##    genre           n
+##    &lt;chr&gt;       &lt;int&gt;
+##  1 Comedy        848
+##  2 Action        738
+##  3 Drama         498
+##  4 Adventure     288
+##  5 Crime         202
+##  6 Biography     135
+##  7 Horror        131
+##  8 Animation      35
+##  9 Fantasy        28
+## 10 Documentary    25
+## 11 Mystery        16
+## 12 Sci-Fi          7
+## 13 Family          3
+## 14 Musical         2
+## 15 Romance         2
+## 16 Western         2
+## 17 Thriller        1</code></pre>
+<p>Return on budget is calculated as the ratio between how much money a film made compared to the budget used during production</p>
+<pre class="r"><code># calculate average return on budget 
+# for each genre and displaying results in a table
+gross_budget &lt;- movies %&gt;% 
+  group_by(genre) %&gt;% 
+  summarise(average_gross = mean(gross,na.rm = TRUE),
+            average_budget = mean(budget,na.rm = TRUE)) %&gt;% 
+  mutate(return_on_budget = average_gross/average_budget) %&gt;% 
+  arrange(desc(return_on_budget))
+
+gross_budget</code></pre>
+<pre><code>## # A tibble: 17 x 4
+##    genre       average_gross average_budget return_on_budget
+##    &lt;chr&gt;               &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;
+##  1 Musical         92084000        3189500          28.9    
+##  2 Family         149160478.      14833333.         10.1    
+##  3 Western         20821884        3465000           6.01   
+##  4 Documentary     17353973.       5887852.          2.95   
+##  5 Horror          37713738.      13504916.          2.79   
+##  6 Fantasy         42408841.      17582143.          2.41   
+##  7 Comedy          42630552.      24446319.          1.74   
+##  8 Mystery         67533021.      39218750           1.72   
+##  9 Animation       98433792.      61701429.          1.60   
+## 10 Biography       45201805.      28543696.          1.58   
+## 11 Adventure       95794257.      66290069.          1.45   
+## 12 Drama           37465371.      26242933.          1.43   
+## 13 Crime           37502397.      26596169.          1.41   
+## 14 Romance         31264848.      25107500           1.25   
+## 15 Action          86583860.      71354888.          1.21   
+## 16 Sci-Fi          29788371.      27607143.          1.08   
+## 17 Thriller            2468         300000           0.00823</code></pre>
+<p>Next, we analyze the gross earnings of the top 15 directors (ranked by total earnings of the movies they produced).</p>
+<pre class="r"><code># calculate total gross earnings and mean, median and standard deviation by director
+gross_directors &lt;- movies %&gt;% 
+  group_by(director) %&gt;% 
+  summarise(total_gross = sum(gross,na.rm = TRUE), 
+            mean_gross = mean(gross,na.rm = TRUE), 
+            median_gross = median(gross,na.rm = TRUE), 
+            std_dev_gross = sd(gross,na.rm = TRUE)) %&gt;% 
+  
+  # select the top 15 items
+  top_n(15,total_gross) %&gt;% 
+  
+  # arrange the items in descending order of total gross
+  arrange(desc(total_gross))
+
+gross_directors</code></pre>
+<pre><code>## # A tibble: 15 x 5
+##    director          total_gross mean_gross median_gross std_dev_gross
+##    &lt;chr&gt;                   &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;
+##  1 Steven Spielberg   4014061704 174524422.   164435221     101421051.
+##  2 Michael Bay        2231242537 171634041.   138396624     127161579.
+##  3 Tim Burton         2071275480 129454718.    76519172     108726924.
+##  4 Sam Raimi          2014600898 201460090.   234903076     162126632.
+##  5 James Cameron      1909725910 318287652.   175562880.    309171337.
+##  6 Christopher Nolan  1813227576 226653447    196667606.    187224133.
+##  7 George Lucas       1741418480 348283696    380262555     146193880.
+##  8 Robert Zemeckis    1619309108 124562239.   100853835      91300279.
+##  9 Clint Eastwood     1378321100  72543216.    46700000      75487408.
+## 10 Francis Lawrence   1358501971 271700394.   281666058     135437020.
+## 11 Ron Howard         1335988092 111332341    101587923      81933761.
+## 12 Gore Verbinski     1329600995 189942999.   123207194     154473822.
+## 13 Andrew Adamson     1137446920 284361730    279680930.    120895765.
+## 14 Shawn Levy         1129750988 102704635.    85463309      65484773.
+## 15 Ridley Scott       1128857598  80632686.    47775715      68812285.</code></pre>
+<p>We also review the ratings of all the movies by genre and create table with other details.</p>
+<pre class="r"><code># calculate minimum, maximum, average, median and standard deviations of ratings by genre
+ratings_table &lt;- movies %&gt;% 
+  group_by(genre) %&gt;% 
+  summarise(max_rating = max(rating), 
+            min_rating = min(rating,na.rm = FALSE), 
+            mean_rating = mean(rating,na.rm = TRUE), 
+            median_rating = median(rating,na.rm = TRUE), 
+            std_dev_rating = sd(rating,na.rm = TRUE)) %&gt;%
+  arrange(genre)
+
+# display results in a table
+ratings_table</code></pre>
+<pre><code>## # A tibble: 17 x 6
+##    genre       max_rating min_rating mean_rating median_rating std_dev_rating
+##    &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;
+##  1 Action             9          2.1        6.23          6.3           1.03 
+##  2 Adventure          8.6        2.3        6.51          6.6           1.09 
+##  3 Animation          8          4.5        6.65          6.9           0.968
+##  4 Biography          8.9        4.5        7.11          7.2           0.760
+##  5 Comedy             8.8        1.9        6.11          6.2           1.02 
+##  6 Crime              9.3        4.8        6.92          6.9           0.849
+##  7 Documentary        8.5        1.6        6.66          7.4           1.77 
+##  8 Drama              8.8        2.1        6.73          6.8           0.917
+##  9 Family             7.9        5.7        6.5           5.9           1.22 
+## 10 Fantasy            7.9        4.3        6.15          6.45          0.959
+## 11 Horror             8.5        3.6        5.83          5.9           1.01 
+## 12 Musical            7.2        6.3        6.75          6.75          0.636
+## 13 Mystery            8.5        4.6        6.86          6.9           0.882
+## 14 Romance            7.1        6.2        6.65          6.65          0.636
+## 15 Sci-Fi             8.2        5          6.66          6.4           1.09 
+## 16 Thriller           4.8        4.8        4.8           4.8          NA    
+## 17 Western            7.3        4.1        5.70          5.70          2.26</code></pre>
+<pre class="r"><code># plote a histogram showing the distribution of ratings by genre
+ratings_plot &lt;- movies %&gt;% 
+  ggplot(data = movies, 
+         mapping = aes(
+           x = rating, 
+           fill = genre)) +
+  geom_histogram(binwidth = 0.7) +
+  facet_wrap(~genre) +
+  labs(title = &quot;Distribution of Ratings by Genre&quot;, 
+       x = &quot;Rating&quot;, 
+       y = &quot;Frequency&quot;) + 
+  theme(legend.position = &quot;none&quot;) +
+  NULL
+
+ratings_plot</code></pre>
+<p><img src="/blogs/project2_files/figure-html/unnamed-chunk-4-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p>To determine whether there is a relationship between number of facebook likes the cast of a movie receives and the gross earnings of that movie, we plot the data as below -</p>
+<pre class="r"><code># constructing a scatter plot 
+  ggplot(data = movies, 
+         mapping = aes(
+           x = cast_facebook_likes, 
+           y = gross)) +
+  
+  # Alpha of 0.2 is used to see 
+  #where there is a cluster of data points on the plot. 
+  #As there are a few outliers, 
+  #the x variable of Cast Facebook Likes 
+  #is restricted from 0 to 200,000.
+  geom_point(alpha = 0.2) +
+  labs(title = &quot;Relationship Between Gross Earnings and Cast Facebook Likes &quot;, 
+       x = &quot;Cast Facebook Likes&quot;, 
+       y = &quot;Gross&quot;,
+       # this forces R not to use exponential notation
+       options(scipen = 999)) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_x_continuous(limits = c(0,200000)) +
+  scale_y_continuous() +
+  geom_smooth() +
+  NULL</code></pre>
+<p><img src="/blogs/project2_files/figure-html/gross_on_fblikes-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>Examining the plot, we can conclude that that Cast Facebook Likes is not a good predictor of gross movie revenue. There is no clear trend with a varying amount of movie revenue earned per amount of Facebook Cast Likes.</p>
+<p>Let’s see if another variable portrays better correlation with gross revenue.</p>
+<pre class="r"><code># create a scatter plot for budget and gross revenue 
+ggplot(data = movies, 
+       mapping = aes(
+         x = budget, 
+         y = gross)) +
+  geom_point(alpha = 0.2) +
+  labs(title = &quot;Relationship Between Gross Earnings and Budget &quot;, 
+       x = &quot;Budget&quot;, 
+       y = &quot;Gross&quot;,
+       options(scipen = 999)) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_smooth() +
+  NULL</code></pre>
+<p><img src="/blogs/project2_files/figure-html/gross_on_budget-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>As seen in the plot above, budget is a better indicator to determine gross revenue for each movie, however it is far from being a perfect indicator. For each budget value, there is a wide spread of values for gross revenue. However, it is clear that with a low budget, a movie is likely to have low gross revenue.</p>
+<p>Let us also check if ratings are a good indicator of gross revenue a movie earns.</p>
+<pre class="r"><code># plot ratings and gross earnings of movies faceted by genre
+ggplot(data = movies, 
+       mapping = aes(
+         x = rating, 
+         y = gross)) +
+  geom_point(alpha = 0.2) +
+  labs(title = &quot;Relationship Between Gross Earnings and Ratings &quot;, 
+       x = &quot;Rating&quot;, 
+       y = &quot;Gross&quot;) + 
+  geom_smooth() +
+  facet_wrap(~genre) +
+  scale_y_continuous(labels = scales::comma) +
+  NULL</code></pre>
+<p><img src="/blogs/project2_files/figure-html/gross_on_rating-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>As seen above there are varying relationships developed for IMDB rating and gross revenue for each genre.</p>
+<p>Genres that have the largest data such as action, comedy and drama show that as ratings increase, there is more gross revenue. Action in particular highlights this relationship. However there are a few genres with limited data points where no relationship can be established such as Musical, Romance, Thriller and Western.</p>
+<p>We think this such correlation and lack of data points also has something to do with the popularity of each genre. In less popular genres such as Documentary, irrespective of the ratings, the gross earnings remain more or less constant. In more popular genres such as Action and Adventure, higher ratings are relatively more correlated with earnings.</p>
+</div>
+<div id="takeaway" class="section level1">
+<h1>Takeaway</h1>
+<p>This analytic project mainly exercises the use of:</p>
+<ul>
+<li>Function: <code>ggplot</code>, <code>top_n</code>, <code>arrange</code>, <code>options(scipen = 999)</code>.</li>
+</ul>
+</div>
+
+                        </div>
+                    </section>
+            <!-- Disqus Inject -->
+                
+            </div>
+            
+        <!-- Footer -->
+            
+                <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                
+                    <li><a href="https://www.facebook.com/profile.php?id=100006673606503" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+                
+                    <li><a href="https://www.instagram.com/igeae/" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+                
+                    <li><a href="https://github.com/zichen-wang-ac" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+                
+                    <li><a href="https://www.linkedin.com/in/zichen-wang-ac/" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+                
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Zichen Wang @LBS</li>
+                
+            </ul>
+        </div>
+    </footer>
+
+            
+        </div>
+
+    <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+
+    
+
+    <!-- Main JS -->
+    <script src="/js/main.js"></script>
+
+    
+
+    
+
+    </body>
+</html>

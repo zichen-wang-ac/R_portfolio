@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Zichen&#39;s R Portfolio</title>
+    <title>Tags on Zichen&#39;s Portfolio</title>
     <link>/tags/</link>
-    <description>Recent content in Tags on Zichen&#39;s R Portfolio</description>
+    <description>Recent content in Tags on Zichen&#39;s Portfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
@@ -35,6 +35,33 @@
       <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
       
       <guid>/tags/regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>project2</title>
+      <link>/tags/project2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/project2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>project3</title>
+      <link>/tags/project3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/project3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>project4</title>
+      <link>/tags/project4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/project4/</guid>
       <description></description>
     </item>
     

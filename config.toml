@@ -1,7 +1,7 @@
 # Site settings
 baseURL = "https://zw-r-portfolio-2020.netlify.app/"
 languageCode = "en-us"
-title = "Zichen's R Portfolio"
+title = "Zichen's Portfolio"
 theme = "forty"
 
 # Enter your tracking code to enable Google Analytics

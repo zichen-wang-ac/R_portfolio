@@ -1,0 +1,361 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="To Be A Data Analyst">
+	<meta name="author" content="Zichen WANG">
+	<meta name="generator" content="Hugo 0.74.3" />
+	<title>World Bank Data Analysis &middot; Zichen&#39;s Portfolio</title>
+	<!-- Stylesheets -->
+	
+	<link rel="stylesheet" href="/css/main.css"/>
+	
+	
+
+	
+
+	<!-- Custom Fonts -->
+	<link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/ie/html5shiv.js"></script>
+	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
+	<![endif]-->
+</head>
+
+    <body>
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+    <header id="header" class="alt">
+        <a href="/" class="logo"><strong> Zichen W | R Portfolio </strong> <span>Est. 2020</span></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+
+<!-- Menu -->
+    <nav id="menu">
+        <ul class="links">
+            
+                <li><a href="/">Home</a></li>
+            
+                <li><a href="/blogs/blog1">About Me</a></li>
+            
+                <li><a href="/blogs/project1">World Bank Data Analysis</a></li>
+            
+                <li><a href="/blogs/project2">IMDB Movie Analysis</a></li>
+            
+                <li><a href="/blogs/project3">IBM HR Analytics</a></li>
+            
+                <li><a href="/blogs/project4">Airbnb Price Model</a></li>
+            
+
+        </ul>
+        <ul class="actions vertical">
+            
+                <li><a href="/" class="button special fit">Contact Me</a></li>
+            
+            
+        </ul>
+    </nav>
+
+        <!-- Main -->
+            <div id="main" class="alt">
+
+                
+                    <section id="one">
+                        <div class="inner">
+                            <header class="major">
+                                <h1>World Bank Data Analysis</h1>
+                            </header>
+                            
+                            
+
+
+<div id="about" class="section level1">
+<h1>About</h1>
+<p>This project is part of the second group homework of <a href="https://mam2021.netlify.app/">Applied Statistics with R</a> taught by Professor Kostis Christodoulou at <strong>London Business School</strong>.</p>
+<p>My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)</p>
+<p>The project utilizes the following datasets:</p>
+<ul>
+<li>Life expectancy at birth</li>
+<li><a href="https://data.worldbank.org/indicator/NY.GDP.PCAP.KD">GDP per capita in constant 2010 US$</a></li>
+<li><a href="https://data.worldbank.org/indicator/SP.DYN.TFRT.IN">Female fertility: The number of babies per woman</a></li>
+<li><a href="https://data.worldbank.org/indicator/SE.PRM.NENR">Primary school enrollment as % of children attending primary school</a></li>
+<li><a href="https://data.worldbank.org/indicator/SH.DYN.MORT">Mortality rate, for under 5, per 1000 live births</a></li>
+<li>HIV prevalence (The estimated number of people living with HIV per 100 population of age group 15-49)</li>
+</ul>
+</div>
+<div id="lets-do-this" class="section level1">
+<h1>Let’s do this</h1>
+<p>Before we start to analyze the data, we must first retrieve the data. If connection permits, you can use a package called <code>wbstats</code> which contains the world bank data. If not, you can download the datasets by clicking on the underlined bullet points above to manually download the data, then you can following the steps below to load data locally.</p>
+<pre class="r"><code># load gapminder HIV and life Expectancy data, 
+# turn the data frames into one format
+hiv &lt;- read_csv(here::here(&quot;data&quot;,&quot;adults_with_hiv_percent_age_15_49.csv&quot;)) %&gt;% 
+    pivot_longer(cols = 2:34, 
+                 names_to = &quot;date&quot;, 
+                 values_to = &quot;hiv_prv&quot;)%&gt;% 
+    mutate(date = as.numeric(date),
+           hiv_prv = as.numeric(hiv_prv))
+
+life_expectancy &lt;- read_csv(here::here(&quot;data&quot;,&quot;life_expectancy_years.csv&quot;)) %&gt;% 
+    pivot_longer(cols = 2:302, 
+                 names_to = &quot;date&quot;, 
+                 values_to = &quot;life_exp&quot;) %&gt;% 
+    mutate(date = as.numeric(date),
+           life_exp = as.numeric(life_exp))
+
+# get World bank data from local due to the difficulty of connection
+worldbank_data &lt;- read_csv(here::here(&quot;data&quot;,&quot;worldbank_data.csv&quot;))
+
+# get a data frame of information regarding countries, indicators, sources, regions, indicator topics, lending types, income levels,  from the World Bank API 
+countries &lt;-  read_csv(here::here(&quot;data&quot;,&quot;countries.csv&quot;))</code></pre>
+<p>After we gather the data, we can merge the datasets together for further convenience. In data merging, there are multiple methods to use such as <code>left_join</code>, <code>merge</code>, and <code>mutate</code>+<code>match</code>.</p>
+<pre class="r"><code># merge the 3 data frames using left_join which is more efficient
+merge_wbd &lt;- worldbank_data %&gt;% 
+  # join the life expectancy and hiv data
+  # using &quot;country&quot; and &quot;date&quot; as the comparing key
+  left_join(., life_expectancy, by = c(&quot;country&quot;,&quot;date&quot;)) %&gt;% 
+  left_join(., hiv, by = c(&quot;country&quot;, &quot;date&quot;)) %&gt;% 
+  # add a column of &quot;region&quot;
+  # using &quot;country&quot; as the comparing key
+  mutate(region = countries$region[match(country, countries$country)]) 
+
+# rename the hard-to-read columns
+names(merge_wbd)[names(merge_wbd) == &quot;SP.DYN.TFRT.IN&quot;] &lt;- &quot;fertility_rate&quot;
+names(merge_wbd)[names(merge_wbd) == &quot;NY.GDP.PCAP.KD&quot;] &lt;- &quot;GDP_cap&quot;
+names(merge_wbd)[names(merge_wbd) == &quot;SE.PRM.NENR&quot;] &lt;- &quot;school_enroll&quot;
+names(merge_wbd)[names(merge_wbd) == &quot;SH.DYN.MORT&quot;] &lt;- &quot;mortality_rate&quot;</code></pre>
+<p>After merging the data, we are now able to answer the following questions using <code>ggplot</code>, a crucial instrument to plot graphs.</p>
+<ol style="list-style-type: decimal">
+<li>What is the relationship between HIV prevalence and life expectancy?</li>
+</ol>
+<pre class="r"><code>#plot the relationship between HIV prevalence and life expectancy
+ggplot(merge_wbd, aes(x = hiv_prv, y = life_exp)) + 
+  geom_point(size = 0.2) + 
+  geom_smooth(alpha = 0.5) +
+  facet_wrap(~region, scales = &quot;free&quot;) +
+  theme_bw() +
+  labs(title = &quot;Relationship Between Life Expectancy and HIV Prevalance&quot;,
+       x = &quot;HIV Prevalance&quot;,
+       y = &quot;Life Expectancy&quot;)</code></pre>
+<p><img src="/blogs/project1_files/figure-html/unnamed-chunk-1-1.png" width="648" style="display: block; margin: auto;" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li>What is the relationship between fertility rate and GDP per capita?</li>
+</ol>
+<pre class="r"><code>#plot the relationship between fertility rate and GDP per capita
+ggplot(merge_wbd, aes(x = GDP_cap, y = fertility_rate)) + 
+  geom_point(size = 0.2) + 
+  geom_smooth() +
+  facet_wrap(~region, scales = &quot;free&quot;) +
+  theme_bw() +
+  labs(title = &quot;Relationship Between Fertility Rate and GDP per Capita&quot;,
+       x = &quot;GDP per Capita&quot;,
+       y = &quot;Fertility Rate&quot;) </code></pre>
+<p><img src="/blogs/project1_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Which regions have the most observations with missing HIV data?</li>
+</ol>
+<pre class="r"><code># package to format data in percentage
+library(&quot;scales&quot;)  
+
+# find the regions with most missing HIV data
+merge_wbd %&gt;% 
+  select(country, region, date, hiv_prv) %&gt;% 
+  group_by(region) %&gt;% 
+  summarize(data_total = NROW(hiv_prv),
+            na_total = sum(is.na(hiv_prv)),
+            na_pct = scales::percent(round(na_total/data_total,2))) %&gt;%
+  ungroup() %&gt;% 
+  ggplot(aes(x = na_total, 
+             y = reorder(region, na_total))) + 
+  geom_col(width = 0.5) +
+  labs(title = &quot;Europe &amp; Central Asia Has The Most Missing Data in HIV&quot;, 
+       subtitle = &quot;Number of Observations &amp; Percentage of Total Regional Observation&quot;,
+       x = &quot;Number of Missing HIV Data&quot;,
+       y = NULL) +
+  theme_bw(base_size = 12) +
+  ggrepel::geom_text_repel(aes(label = na_pct), 
+                           nudge_x = 1, size = 3) +
+  NULL</code></pre>
+<p><img src="/blogs/project1_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>How has mortality rate for under 5 changed by region? In each region, what are the top 5 countries that have seen the greatest improvement, as well as those 5 countries where mortality rates have had the least improvement or even deterioration?</li>
+</ol>
+<pre class="r"><code># plot the child(under 5) mortality rate trend by regions
+merge_wbd %&gt;% 
+  select(region, country, mortality_rate, date) %&gt;% 
+  drop_na(., mortality_rate) %&gt;% 
+  group_by(region, date) %&gt;% 
+  summarize(mean_mort = mean(mortality_rate)) %&gt;% 
+  ungroup() %&gt;% 
+  ggplot(aes(x = date, y = mean_mort)) + 
+  geom_line() + 
+  facet_wrap(~region, scales = &quot;free&quot;) +
+  labs(title = &quot;Regional Child Mortality Rate Is Descending(1960 - 2016)&quot;,
+       x = NULL,
+       y = &quot;Mean Mortality Rate&quot;) +
+  theme_bw() +
+  NULL</code></pre>
+<p><img src="/blogs/project1_files/figure-html/unnamed-chunk-4-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># find the top 5 improved countries with data from 2000 to 2016 
+# as many countries do not have earlier data
+new_merge_wbd &lt;- merge_wbd %&gt;% 
+  select(region, country, mortality_rate, date) %&gt;% 
+  filter(date %in% c(&quot;2000&quot;,&quot;2016&quot;)) %&gt;% 
+  pivot_wider(names_from = date, 
+              values_from = mortality_rate) %&gt;% 
+  drop_na()
+
+# rename the year columns as they are hard to reference
+names(new_merge_wbd)[3] &lt;- &quot;Y2000&quot; 
+names(new_merge_wbd)[4] &lt;- &quot;Y2016&quot;
+
+# find and plot the most improved countries in each region
+# as the improvement of mortality rate should be a decrease,
+# the lower the change, the more improvement
+most_improved_mortality_rate &lt;- new_merge_wbd %&gt;% 
+  mutate(mort_impr = (Y2016 - Y2000)/Y2000) %&gt;% 
+  group_by(region) %&gt;% 
+  
+  # select the maximums
+  slice_min(order_by = mort_impr, n = 5) %&gt;% 
+  
+  ungroup() %&gt;% 
+  ggplot(aes(x = mort_impr, 
+             y = reorder(country, mort_impr))) +
+  geom_col() +
+  facet_wrap(~region, scales = &quot;free&quot;) +
+  labs(title = &quot;5 Countries with the Most Improvement in Mortality Rate 2000-2016&quot;,
+       x = &quot;Percentage Change of Mortality Rate&quot;,
+       y = NULL) +
+  theme_bw() +
+  NULL
+
+# print
+most_improved_mortality_rate</code></pre>
+<p><img src="/blogs/project1_files/figure-html/unnamed-chunk-4-2.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># find and plot the least improved countries in each region
+least_improved_mortality_rate &lt;- new_merge_wbd %&gt;% 
+  mutate(mort_impr = (Y2016 - Y2000)/Y2000) %&gt;% 
+  group_by(region) %&gt;% 
+  
+  # select the minimums
+  slice_max(order_by = mort_impr, n = 5) %&gt;% 
+  
+  ungroup() %&gt;% 
+  ggplot(aes(x = mort_impr, 
+             y = reorder(country, mort_impr))) +
+  geom_col() +
+  facet_wrap(~region, scales = &quot;free&quot;) +
+  labs(title = &quot;5 Countries with the Least Improvement in Mortality Rate 2000-2016&quot;,
+       x = &quot;Percentage Change of Mortality Rate&quot;,
+       y = NULL) +
+  theme_bw() +
+  NULL
+
+# print
+least_improved_mortality_rate</code></pre>
+<p><img src="/blogs/project1_files/figure-html/unnamed-chunk-4-3.png" width="648" style="display: block; margin: auto;" /></p>
+<blockquote>
+<p><strong>Interpretation:</strong>
+The mortality rate for under 5 shows a decreasing trend amongst all regions from 1960 to 2016. As for improvements over the years, because some countries lack data from 1960, we decide to compare data from 2016 to data 2000 to inlcude as many countries as possible to discover the improvements of mortality rate. A negative percentage change shows a country has improved/decreased its mortality rate, whereas a positive percentage change shows deterioration. Hence 5 countries’ mortality rate deterioated during 2000-2016.</p>
+</blockquote>
+<ol start="5" style="list-style-type: decimal">
+<li>Is there a relationship between primary school enrollment and fertility rate?</li>
+</ol>
+<pre class="r"><code># plot the relationship between primary school enrollment and fertility rate
+merge_wbd %&gt;% 
+  select(region, country, school_enroll, fertility_rate) %&gt;%
+  drop_na(., c(school_enroll, fertility_rate)) %&gt;% 
+  group_by(region, country) %&gt;% 
+  ggplot(aes(x = school_enroll, 
+             y = fertility_rate)) +
+  geom_point(size = 0.5, alpha = 0.3) +
+  geom_smooth() +
+  facet_wrap(~region, scales = &quot;free&quot;) +
+  labs(title = &quot;Negative Correlation Between Primary School Enrollment and Fertility Rate&quot;,
+       x = &quot;Primary School Enrollment Rate&quot;,
+       y = &quot;Fertility Rate&quot;) +
+  theme_bw() +
+  NULL</code></pre>
+<p><img src="/blogs/project1_files/figure-html/unnamed-chunk-5-1.png" width="648" style="display: block; margin: auto;" /></p>
+<blockquote>
+<p><strong>Interpretation:</strong>
+There is a negative correlation between primary school enrollment and fertility rate in all regions.</p>
+</blockquote>
+</div>
+<div id="takeaway" class="section level1">
+<h1>Takeaway</h1>
+<p>This analytic project mainly exercises the use of:</p>
+<ul>
+<li><p>Library: <code>tidyverse</code>, <code>here</code>, <code>ggthemes</code>, <code>scales</code>.</p></li>
+<li><p>Function: <code>ggplot</code>, <code>pivot_longer</code>, <code>pivot_wider</code>,<code>left_join</code>, <code>drop_na</code>, <code>names</code>.</p></li>
+</ul>
+</div>
+
+                        </div>
+                    </section>
+            <!-- Disqus Inject -->
+                
+            </div>
+            
+        <!-- Footer -->
+            
+                <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                
+                    <li><a href="https://www.facebook.com/profile.php?id=100006673606503" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+                
+                    <li><a href="https://www.instagram.com/igeae/" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+                
+                    <li><a href="https://github.com/zichen-wang-ac" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+                
+                    <li><a href="https://www.linkedin.com/in/zichen-wang-ac/" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+                
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Zichen Wang @LBS</li>
+                
+            </ul>
+        </div>
+    </footer>
+
+            
+        </div>
+
+    <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+
+    
+
+    <!-- Main JS -->
+    <script src="/js/main.js"></script>
+
+    
+
+    
+
+    </body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>file on Zichen&#39;s Portfolio</title>
+    <link>/categories/file/</link>
+    <description>Recent content in file on Zichen&#39;s Portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="/categories/file/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Price Prediction Model for Airbnb in Beijing</title>
+      <link>/blogs/project4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/project4/</guid>
+      <description>About This project is the final group project of Applied Statistics with R taught by Professor Kostis Christodoulou at London Business School.
+My collaborators are Alessandro Angeletti, Nitya Chopra, Johanna Jeffery, and Christopher Lewis. (Hail Group 13!)
+The following journey will take a long time. To have a glance at our final findings, you can download our presentation deck here.</description>
+    </item>
+    
+  </channel>
+</rss>
